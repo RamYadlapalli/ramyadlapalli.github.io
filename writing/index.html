@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing — Ram Yadlapalli</title>
+<meta name="description" content="Writing by Ram Yadlapalli: build notes from production AI work, starting with how we built an MCP server on existing APIs.">
+<meta name="author" content="Ram Yadlapalli">
+<link rel="canonical" href="https://ramyadlapalli.github.io/writing/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Writing — Ram Yadlapalli">
+<meta property="og:description" content="Build notes from production AI work by Ram Yadlapalli, VP of Product & Engineering.">
+<meta property="og:url" content="https://ramyadlapalli.github.io/writing/">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root{color-scheme:light dark;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad}
+  @media (prefers-color-scheme: dark){:root{--bg:#111214;--ink:#ececec;--dim:#aaa;--faint:#888;--line:#2a2c30;--acc:#7d9bff}}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+  header.site{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:32px}
+  header.site .name{font-weight:700;font-size:17px;color:var(--ink);text-decoration:none}
+  header.site nav{display:flex;gap:18px;font-size:14.5px}
+  header.site nav a{color:var(--dim);text-decoration:none}
+  header.site nav a:hover{color:var(--ink)}
+  @media(max-width:520px){header.site nav{display:none}}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+  .intro{color:var(--dim);margin-bottom:30px}
+  .post{padding:18px 0;border-top:1px solid var(--line)}
+  .post .date{color:var(--faint);font-size:14.5px}
+  .post h2{font-size:21px;font-weight:800;margin:3px 0 6px}
+  .post h2 a{color:var(--ink);text-decoration:none}
+  .post h2 a:hover{color:var(--acc)}
+  .post p{color:var(--dim)}
+  .post .read{font-size:15px;margin-top:6px}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{border-top:1px solid var(--line);margin-top:40px;padding-top:18px;color:var(--faint);font-size:14.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="name" href="../">Ram Yadlapalli</a>
+    <nav><a href="../">Home</a><a href="../ask/">Ask (AI demo)</a></nav>
+  </header>
+
+  <h1>Writing</h1>
+  <p class="intro">Build notes from work I have actually shipped. Plain accounts of what we built, what worked, and what we would do next.</p>
+
+  <div class="post">
+    <p class="date">November 2026 · 14 min read</p>
+    <h2><a href="../mcp-server/">How We Built an MCP Server on Our Existing APIs</a></h2>
+    <p>We built a production MCP server in a few weeks, mostly by reuse: the same reporting APIs, the same identity provider, the same Kubernetes cluster. How OAuth with PKCE, multi-tenancy, tool design, and a summary table made it work, and the Microsoft Fabric phase we plan next.</p>
+    <p class="read"><a href="../mcp-server/">Read the post →</a></p>
+  </div>
+
+  <footer>Ram Yadlapalli · Dallas, Texas · 2026</footer>
+</div>
+</body>
+</html>
