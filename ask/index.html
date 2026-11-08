@@ -3,25 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ask my profile — Ram Yadlapalli</title>
+<title>Ask my profile | Ram Yadlapalli</title>
 <meta name="description" content="Ram Yadlapalli builds AI products for freight operations. Ask the embedded model in your browser anything about his work.">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <style>
   :root{
-    color-scheme:light dark;
+    color-scheme:light;
     --bg:#fbfbfc; --ink:#111318; --dim:#565d66; --faint:#8a9099;
     --line:#e5e6ea; --card:#ffffff; --acc:#2f4bff; --accsoft:rgba(47,75,255,.07);
     --bodytext:#2c313a; --inputbg:#ffffff; --inputborder:#d4d6db;
     --ahead1:#ffffff; --ahead2:#f7f8ff; --btnhover:#000000; --btntext:#ffffff;
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0e1013; --ink:#eef0f3; --dim:#a7adb8; --faint:#7d838d;
-      --line:#262a31; --card:#15181d; --acc:#7d9bff; --accsoft:rgba(125,155,255,.13);
-      --bodytext:#c9ced6; --inputbg:#101216; --inputborder:#333842;
-      --ahead1:#171a20; --ahead2:#12151b; --btnhover:#2a2e35; --btntext:#0e1013;
-    }
-  }
+  
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.62}
   .page{max-width:880px;margin:0 auto;padding:0 24px 72px}
@@ -114,9 +107,9 @@
   </header>
 
   <div class="hero">
-    <div class="eyebrow">VP of Product &amp; Engineering · Optym · Dallas</div>
+    <div class="eyebrow">VP of Product Development and Engineering · Dallas</div>
     <h1>Building AI products for freight operations.</h1>
-    <p class="lede">I'm Ram Yadlapalli. I lead product and engineering as one team at Optym, where I built the RouteMax platform from the ground up. <b>Today my work is AI: agentic systems applied to real operational problems.</b> The fastest way to learn about it is to ask.</p>
+    <p class="lede">I'm Ram Yadlapalli. I lead a 30 person product and engineering organization in Dallas, and I still write code. In 2026 I built an MCP server for customer reporting, a shipment tracking product, and an appointment scheduling agent. Ask about any of it below.</p>
 
     <div class="askpanel" id="ask">
       <div class="ahead"><span class="t"><span class="dot"></span>Ask about my work</span><span class="badge" id="engineLabel">Engine: page text</span></div>
@@ -129,13 +122,13 @@
         </form>
         <div class="chips" id="chips">
           <button class="chip" type="button">What is his AI experience?</button>
-          <button class="chip" type="button">What did he build at Optym?</button>
+          <button class="chip" type="button">What did he build?</button>
           <button class="chip" type="button">How does he work with customers?</button>
           <button class="chip" type="button">Summarize his career in three lines</button>
           <button class="chip" type="button">How can I contact him?</button>
         </div>
         <progress id="modelProgress" max="1" value="0"></progress>
-        <p class="note" id="modelStatus">This page embeds an open-source language model, Qwen 2.5 (0.5B, Apache 2.0), that runs entirely in your browser with WebLLM. Answers start instantly from the page text while the model loads in the background (about 300 MB, once); once it is ready, the model phrases the answers itself, grounded only in the profile on this page. No server, no API key, and your questions never leave this tab.</p>
+        <p class="note" id="modelStatus">This page runs an open source language model, Qwen 2.5 (0.5B, Apache 2.0), entirely in your browser with WebLLM. Answers start from the page text while the model loads in the background (about 300 MB, once). When it is ready, the model writes the answers itself, using only the profile on this page. There is no server and no API key, and your questions do not leave this tab.</p>
         <div id="chat" aria-live="polite"></div>
       </div>
     </div>
@@ -145,7 +138,7 @@
   <div class="askpanel" id="fit" style="margin-top:22px">
     <div class="ahead"><span class="t"><span class="dot"></span>Fit check</span><span class="badge">For recruiters</span></div>
     <div class="abody">
-      <p style="color:var(--dim);font-size:15.5px;margin-bottom:12px">Hiring for a role? Paste the job description and the model will compare it against my profile, on your machine, and write an honest fit brief: where I match, where I do not, and an opening line if you want to talk.</p>
+      <p style="color:var(--dim);font-size:15.5px;margin-bottom:12px">Hiring for a role? Paste the job description. The model compares it with my profile on your machine and writes a fit brief: where the profile matches, where it does not, and an opening line.</p>
       <textarea id="jdInput" rows="6" placeholder="Paste a job description here…" aria-label="Paste a job description" style="width:100%;font:inherit;font-size:15.5px;padding:12px 14px;border:1px solid var(--inputborder);border-radius:10px;background:var(--inputbg);color:var(--ink);resize:vertical"></textarea>
       <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
         <button class="btn" id="fitBtn" type="button">Analyze fit</button>
@@ -156,68 +149,69 @@
   </div>
 
   <section class="blk" id="ai">
-    <div class="shead"><span class="tag">AI Work</span><h2>AI, front and center</h2></div>
+    <div class="shead"><span class="tag">AI Work</span><h2>AI work in 2026</h2></div>
     <div class="cards">
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg></div>
-        <h3>Agentic AI products</h3>
-        <p>I am building AI products from discovery, applying agentic AI to real operational problems in freight: systems that perceive a workflow, decide, and act, with a human accountable for the outcome.</p>
+        <h3>MCP server for customer reporting</h3>
+        <p>Built in October 2026. Customers ask their operational questions through an AI assistant instead of waiting for custom reports. They use it for day to day reporting.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19H2"/></svg></div>
-        <h3>AI where reliability matters</h3>
-        <p>My platforms run live carrier operations every day, so AI ships with an operator's discipline: root cause analysis on production issues, measurable value for the customer, no demos that die in the field.</p>
+        <h3>Appointment scheduling agent</h3>
+        <p>Built in July 2026, in pilot with two customers. An ML model recommends the best appointment for each load. Agents book it by voice on phone calls, by text and email, and through a Claude browser use agent on consignee portals that have no API.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></div>
-        <h3>Hands-on leadership</h3>
-        <p>I stay in the architecture and the code while leading product and engineering as one team, with P&amp;L responsibility for the business unit. Strategy and implementation are the same conversation.</p>
+        <h3>Shipment tracking</h3>
+        <p>Built in April 2026. Carriers and their customers track a shipment from pickup to delivery, with ETAs, live driver location, and PO and BOL lookups.</p>
       </div>
     </div>
   </section>
 
   <section class="blk" id="writing">
-    <div class="shead"><span class="tag">Writing</span><h2>From the work</h2></div>
-    <p><a href="mcp-server/"><b>How We Built an MCP Server on Our Existing APIs</b></a><br>
-    <span style="color:var(--dim)">A production MCP server built by reuse: the same reporting APIs, identity provider, and Kubernetes cluster. OAuth, multi-tenancy, tool design, and performance, in full.</span></p>
+    <div class="shead"><span class="tag">Writing</span><h2>Writing</h2></div>
+    <p><a href="../mcp-server/"><b>How We Built an MCP Server on Our Existing APIs</b></a><br>
+    <span style="color:var(--dim)">A production MCP server built on the reporting APIs, identity provider, and Kubernetes cluster we already had. OAuth, multi-tenancy, tool design, and performance.</span></p>
   </section>
 
-  <section class="blk" id="routemax">
-    <div class="shead"><span class="tag">Foundation</span><h2>RouteMax</h2></div>
-    <p>RouteMax is a first and final mile (pickup and delivery) routing optimization and execution platform for LTL carriers. I conceived it and built it from zero, and owned the full lifecycle end to end: field discovery with carrier operations teams, product definition and roadmap, system architecture, hands-on development, Kubernetes deployment, launch, and enterprise rollout.</p>
-    <p>It is in production at enterprise LTL carriers across the US and Canada, including publicly announced customers Yellow, Roadrunner, and Estes Express Lines. I also designed and developed the shipment tracking capability end to end, enabling customers to track every shipment from pickup to delivery.</p>
-    <p class="dim">It is also where my AI work comes from: a decade of operational data, real users in the field, and problems that only appear at production scale.</p>
+  <section class="blk" id="platform">
+    <div class="shead"><span class="tag">Foundation</span><h2>The platform</h2></div>
+    <p>The platform is a First Mile and Last Mile Optimization and execution product for LTL carriers: a React and TypeScript planner and dispatcher web app, a React Native driver app, Node.js and .NET backends, Azure SQL, and Kubernetes.</p>
+    <p>I led its 2018 rebuild from an early planning tool into a cloud native platform. It is in production at 11 LTL carriers in the US and Canada, supporting nearly 20,000 drivers and about 1,000 planners and dispatchers, at roughly a million transactions per hour. I am the second highest contributor in its 11 year history, with about 4,220 commits.</p>
+    <p class="dim">Releases are monthly. About 800 to 1,000 pull requests merge each year. Hotfix branches fell from 45 in 2023 to 2 in 2026.</p>
   </section>
 
   <section class="blk" id="about">
-    <div class="shead"><span class="tag">About</span><h2>Field first</h2></div>
-    <p>VP of Product &amp; Engineering at Optym in Dallas. I built RouteMax, our first and final mile routing optimization and execution platform for LTL carriers, from the ground up, and I lead product and engineering as one team.</p>
-    <p>My approach is field first, and I take that literally. During the build and rollout years I spent about half my time onsite at carrier terminals and riding with drivers, working directly with customers to make sure they realized the full value of the product. I stay hands-on in architecture, code, and production problem solving.</p>
-    <p>Today I am building AI products from discovery, applying agentic AI to real operational problems.</p>
-    <p>Earlier at MAQ Software I built applications for Microsoft, Starbucks, and Amazon.</p>
+    <div class="shead"><span class="tag">About</span><h2>How I work</h2></div>
+    <p>VP of Product Development and Engineering in Dallas. I lead a 30 person organization through engineering managers, and I own engineering, the product roadmap, and the business unit P&amp;L.</p>
+    <p>The product work starts with customers. During the build and rollout years I spent about half my time onsite at carrier terminals and riding with drivers. I sit with planners, dispatchers, drivers, and dock teams, listen to the problem in their words, and turn it into software. I stay in the architecture and the code.</p>
+    <p>Earlier at MAQ Software I built applications for Microsoft, Starbucks, and Amazon, and led a team of 10 from 2015.</p>
   </section>
 
   <section class="blk" id="background">
     <div class="shead"><span class="tag">Background</span><h2>Career path</h2></div>
-    <div class="row"><span class="rt">VP of Product &amp; Engineering</span><span class="ro">Optym, Dallas</span><span class="ry">2026 to present</span></div>
-    <div class="row"><span class="rt">Senior Director, Product Development &amp; Engineering</span><span class="ro">Optym</span><span class="ry">2024 to 2025</span></div>
-    <div class="row"><span class="rt">Director</span><span class="ro">Optym</span><span class="ry">2022 to 2023</span></div>
-    <div class="row"><span class="rt">Senior Principal Software Engineer</span><span class="ro">Optym</span><span class="ry">2018 to 2021</span></div>
-    <div class="row"><span class="rt">Senior Software Engineer</span><span class="ro">Optym</span><span class="ry">2017</span></div>
-    <div class="row"><span class="rt">Senior Software Engineer</span><span class="ro">MAQ Software, Hyderabad</span><span class="ry">2011 to 2017</span></div>
-    <div class="row"><span class="rt">Associate Software Engineer</span><span class="ro">Teleparadigm Networks, Hyderabad</span><span class="ry">2011</span></div>
+    <div class="row"><span class="rt">Vice President of Product Development and Engineering</span><span class="ro">Dallas</span><span class="ry">Jan 2026 to present</span></div>
+    <div class="row"><span class="rt">Senior Director of Product Development and Engineering</span><span class="ro">Dallas</span><span class="ry">2024 to 2025</span></div>
+    <div class="row"><span class="rt">Director of Product Development and Engineering</span><span class="ro">Dallas</span><span class="ry">2022 to 2023</span></div>
+    <div class="row"><span class="rt">Engineering Manager</span><span class="ro">Dallas</span><span class="ry">2020 to 2021</span></div>
+    <div class="row"><span class="rt">Principal Software Engineer</span><span class="ro">Dallas</span><span class="ry">2018 to 2019</span></div>
+    <div class="row"><span class="rt">Senior Software Engineer</span><span class="ro">Dallas</span><span class="ry">Feb to Dec 2017</span></div>
+    <div class="row"><span class="rt">Senior Software Engineer</span><span class="ro">MAQ Software, Hyderabad</span><span class="ry">2014 to 2017</span></div>
+    <div class="row"><span class="rt">Software Development Engineer</span><span class="ro">MAQ Software, Hyderabad</span><span class="ry">2011 to 2014</span></div>
+    <div class="row"><span class="rt">Associate Software Engineer</span><span class="ro">Teleparadigm Networks, Hyderabad</span><span class="ry">Aug to Nov 2011</span></div>
     <div class="row"><span class="rt">B.Tech, Computer Science and Engineering</span><span class="ro">JNTU Hyderabad</span><span class="ry">2007 to 2011</span></div>
   </section>
 
   <section class="blk" id="press">
     <div class="shead"><span class="tag">Press</span><h2>Coverage</h2></div>
     <ul class="press">
-      <li><span class="src">DC Velocity</span><a href="https://www.dcvelocity.com/articles/59124-southeastern-freight-lines-sefl-completes-optym-s-routemax-rollout-across-its-network" target="_blank" rel="noopener">Southeastern Freight Lines completes RouteMax rollout across its network</a></li>
-      <li><span class="src">DC Velocity</span><a href="https://www.dcvelocity.com/articles/56779-yellow-selects-optym-s-routemax-to-optimize-p-d-operations" target="_blank" rel="noopener">Yellow selects Optym's RouteMax to optimize pickup and delivery operations</a></li>
-      <li><span class="src">PRWeb</span><a href="https://www.prweb.com/releases/frozen-food-express-partners-with-optym-for-pickup-and-delivery-route-optimization-302267457.html" target="_blank" rel="noopener">Frozen Food Express partners with Optym for pickup and delivery route optimization</a></li>
-      <li><span class="src">PRWeb</span><a href="https://www.prweb.com/releases/southeastern-freight-lines-sefl-completes-optyms-routemax-rollout-across-its-network-301983015.html" target="_blank" rel="noopener">Southeastern Freight Lines completes Optym's RouteMax rollout across its network</a></li>
-      <li><span class="src">GlobeNewswire</span><a href="https://www.globenewswire.com/news-release/2022/07/19/2481998/0/en/HaulSuite-Wins-Top-Supply-Chain-Project-Award-from-SDCE.html" target="_blank" rel="noopener">RouteMax deployment at Saia wins Top Supply Chain Project award</a></li>
-      <li><span class="src">IT Supply Chain</span><a href="https://itsupplychain.com/haulsuites-routemax-new-real-time-capabilities-implemented-by-southwestern-motor-transport-inc/" target="_blank" rel="noopener">RouteMax real-time capabilities at Southwestern Motor Transport</a></li>
+      <li><span class="src">DC Velocity</span><a href="https://www.dcvelocity.com/articles/59124-southeastern-freight-lines-sefl-completes-optym-s-routemax-rollout-across-its-network" target="_blank" rel="noopener">Southeastern Freight Lines completes rollout of the platform across its network</a></li>
+      <li><span class="src">DC Velocity</span><a href="https://www.dcvelocity.com/articles/56779-yellow-selects-optym-s-routemax-to-optimize-p-d-operations" target="_blank" rel="noopener">Yellow selects the platform to optimize pickup and delivery operations</a></li>
+      <li><span class="src">PRWeb</span><a href="https://www.prweb.com/releases/frozen-food-express-partners-with-optym-for-pickup-and-delivery-route-optimization-302267457.html" target="_blank" rel="noopener">Frozen Food Express partners for pickup and delivery route optimization</a></li>
+      <li><span class="src">PRWeb</span><a href="https://www.prweb.com/releases/southeastern-freight-lines-sefl-completes-optyms-routemax-rollout-across-its-network-301983015.html" target="_blank" rel="noopener">Southeastern Freight Lines completes rollout of the platform across its network</a></li>
+      <li><span class="src">GlobeNewswire</span><a href="https://www.globenewswire.com/news-release/2022/07/19/2481998/0/en/HaulSuite-Wins-Top-Supply-Chain-Project-Award-from-SDCE.html" target="_blank" rel="noopener">Platform deployment at Saia wins Top Supply Chain Project award</a></li>
+      <li><span class="src">IT Supply Chain</span><a href="https://itsupplychain.com/haulsuites-routemax-new-real-time-capabilities-implemented-by-southwestern-motor-transport-inc/" target="_blank" rel="noopener">Platform real-time capabilities at Southwestern Motor Transport</a></li>
     </ul>
   </section>
 
@@ -241,15 +235,16 @@
 (function(){
   /* ---------- profile knowledge (for the model) ---------- */
   var PROFILE = [
-    "Name: Ram Yadlapalli. Role: VP of Product and Engineering at Optym, based in Dallas, Texas. He has 15 years of experience in software engineering. His current focus is AI: he is building AI products from discovery, applying agentic AI to real operational problems in freight.",
-    "About: He built RouteMax, Optym's first and final mile routing optimization and execution platform for LTL carriers, from the ground up, and he leads product and engineering as one team.",
-    "Approach: His approach is field first. During the build and rollout years he spent about half his time onsite at carrier terminals and riding with drivers, working directly with customers to make sure they realized the full value of the product. He stays hands-on in architecture, code, and production problem solving. He works closely with customers to ensure they are realizing the value of the product, and he leads root cause analysis on complex production issues across carrier deployments.",
-    "AI work: Today he is building AI products from discovery, applying agentic AI to real operational problems. His AI work grows out of a decade of operational freight data and production systems that run live carrier operations daily, so reliability and measurable customer value come first.",
-    "RouteMax details: A first and final mile (pickup and delivery) routing optimization and execution platform for LTL carriers. He conceived it and built it from zero, owning the full lifecycle end to end: field discovery with carrier operations teams, product definition and roadmap, system architecture, hands-on development, Kubernetes deployment, launch, and enterprise rollout. It is in production at enterprise LTL carriers across the US and Canada, including publicly announced customers Yellow, Roadrunner, and Estes Express Lines, with rollouts at Southeastern Freight Lines and Frozen Food Express. He designed and developed the shipment tracking capability end to end, enabling customers to track every shipment from pickup to delivery.",
-    "Career at Optym (Dallas, 2017 to present): joined as Senior Software Engineer (2017), Senior Principal Software Engineer (2018 to 2021), Director (2022 to 2023), Senior Director of Product Development and Engineering (2024 to 2025), VP of Product and Engineering (2026 to present). He leads a 30-person product and engineering organization, with P&L responsibility for the business unit.",
-    "Earlier career: MAQ Software, Hyderabad, 2011 to 2017 (Software Development Engineer, then Senior Software Engineer), where he built enterprise web, portal, and BI applications for Microsoft, Starbucks, and Amazon, including the architecture for a BI platform portal and a Sales Insights application. Teleparadigm Networks, Hyderabad, 2011, where he developed iOS applications, including two for an Australian client, one of them for Sydney Airport.",
-    "Education: B.Tech, Computer Science and Engineering, JNTU Hyderabad, 2007 to 2011.",
-    "Press coverage (he is quoted as RouteMax's product leader): DC Velocity on Southeastern Freight Lines completing its RouteMax rollout and on Yellow selecting RouteMax; PRWeb on Frozen Food Express partnering with Optym and on the Southeastern rollout; GlobeNewswire on a RouteMax deployment at Saia winning an SDCE Top Supply Chain Project award; IT Supply Chain on RouteMax real-time capabilities at Southwestern Motor Transport.",
+    "Name: Ram Yadlapalli. Role: Vice President of Product Development and Engineering, based in Dallas, Texas. He leads a 30 person product and engineering organization through engineering managers, owns engineering, the product roadmap, and the business unit P&L, and has managed teams since 2015. He still writes code.",
+    "The platform: A First Mile and Last Mile Optimization and execution product for LTL carriers. Ram led its 2018 rebuild from an early planning tool into a cloud native platform. It is in production at 11 LTL carriers in the US and Canada, supporting nearly 20,000 drivers and about 1,000 planners and dispatchers, at roughly a million transactions per hour. Ram is the second highest contributor in its 11 year history, with about 4,220 commits across the React frontend, Node services, React Native driver app, SQL database, Helm deployment, and the .NET engine.",
+    "Approach: Product work starts with customers. During the build and rollout years Ram spent about half his time onsite at carrier terminals and riding with drivers. He sits with planners, dispatchers, drivers, and dock teams, listens to the problem in their words, and turns it into software, then stays with customers through implementation, adoption, and support.",
+    "AI work in 2026: Ram built three products. An MCP server for customer reporting (October 2026): customers ask their operational questions through an AI assistant instead of waiting for custom reports, and they use it for day to day reporting. Shipment Tracking (April 2026): track and trace for LTL carriers from pickup to delivery, with ETAs, live driver location, and PO and BOL lookups. An appointment scheduling agent (July 2026, in pilot with two customers): an ML model recommends the best appointment for each load, and agents book it by voice on phone calls, by text and email, and through a Claude browser use agent on consignee portals that have no API. A cross dock automation product is in development with two LTL carriers.",
+    "Delivery and reliability: Monthly releases, about 800 to 1,000 merged pull requests per year, more than 1,000 tracked test files. He removed retry storms against a carrier client API and set explicit timeouts in the dispatch orchestrator. Hotfix branches fell from 45 in 2023 to 2 in 2026.",
+    "Career (Dallas, Feb 2017 to present): Senior Software Engineer (2017), Principal Software Engineer (2018 to 2019), Engineering Manager (2020 to 2021), Director of Product Development and Engineering (2022 to 2023), Senior Director (2024 to 2025), Vice President of Product Development and Engineering (Jan 2026 to present).",
+    "Earlier career: MAQ Software, Hyderabad, Dec 2011 to Jan 2017: Software Development Engineer, then Senior Software Engineer, leading a team of 10 from 2015. He built enterprise web, portal, and BI applications for Microsoft, Starbucks, and Amazon. Teleparadigm Networks, Hyderabad, Aug to Nov 2011: iOS applications, including two for an Australian client, one for a major airport.",
+    "Skills: TypeScript, React, React Native, Node.js, Python, .NET, Azure (AKS, Azure SQL, Service Bus), Kubernetes, Helm, Terraform, Docker, Redis, Keycloak, Datadog, CockroachDB, MCP servers, and agentic AI applications including voice agents and browser use agents. Nine Microsoft certifications.",
+    "Education: B.Tech, Computer Science and Engineering, Younis Sultan College of Engineering, JNTU Hyderabad, 2007 to 2011.",
+    "Press: Trade press has covered the platform rollouts he led, in DC Velocity, PRWeb, GlobeNewswire, and IT Supply Chain, including a Top Supply Chain Project award for one deployment.",
     "Contact: Email rambabu.1990@gmail.com. LinkedIn: linkedin.com/in/rambabu-yadlapalli. GitHub: github.com/RamYadlapalli."
   ].join("\n");
   var SYSTEM = "You are the assistant on Ram Yadlapalli's portfolio page. Answer visitors' questions about Ram using ONLY the profile below.\n" +
@@ -258,29 +253,29 @@
   /* ---------- retrieval (instant answers from the page text) ---------- */
   var CORPUS = [
     { id:"identity", section:"About", anchor:"#about", strong:["ram","yadlapalli","name","identity"], kw:["person","profile","about"],
-      a:"I am Ram Yadlapalli, VP of Product and Engineering at Optym in Dallas. I built RouteMax, our first and final mile routing optimization and execution platform for LTL carriers, from the ground up, and I lead product and engineering as one team. Today I am building AI products from discovery, applying agentic AI to real operational problems." },
-    { id:"routemax", section:"RouteMax", anchor:"#routemax", strong:["routemax"], kw:["build","built","optym","product","platform","routing","routes","software","flagship"],
-      a:"I built RouteMax at Optym from zero: a first and final mile routing optimization and execution platform for LTL carriers. I owned the full lifecycle end to end, from field discovery and product definition through architecture, hands-on development, Kubernetes deployment, and enterprise rollout. It is in production at enterprise LTL carriers across the US and Canada." },
+      a:"I am Ram Yadlapalli, Vice President of Product Development and Engineering in Dallas. I lead a 30 person product and engineering organization, and I led the 2018 rebuild of our First Mile and Last Mile Optimization and execution product for LTL carriers. In 2026 I built an MCP server, a shipment tracking product, and an appointment scheduling agent." },
+    { id:"platform", section:"The platform", anchor:"#platform", strong:["platform"], kw:["build","built","product","routing","routes","software","optimization","execution"],
+      a:"The platform is a First Mile and Last Mile Optimization and execution product for LTL carriers. I led its 2018 rebuild from an early planning tool into a cloud native platform, and I am the second highest contributor in its 11 year history, with about 4,220 commits. It is in production at 11 LTL carriers in the US and Canada, supporting nearly 20,000 drivers and about 1,000 planners and dispatchers." },
     { id:"field", section:"About", anchor:"#about", strong:["field","terminal","terminals","drivers","truck","onsite","customers","customer"], kw:["work","approach","discovery","value","users"],
-      a:"My approach is field first, and I take that literally. During the build and rollout years I spent about half my time onsite at carrier terminals and riding with drivers, working directly with customers to make sure they realized the full value of the product. I work closely with customers to ensure they are realizing the value of the product, and I lead root cause analysis on complex production issues." },
+      a:"The product work starts with customers. During the build and rollout years I spent about half my time onsite at carrier terminals and riding with drivers. I sit with planners, dispatchers, drivers, and dock teams, listen to the problem in their words, and turn it into software. I stay with customers through implementation, adoption, and support." },
     { id:"ai", section:"AI Work", anchor:"#ai", strong:["ai","agentic","agent","agents","llm","artificial"], kw:["building","now","today","future","machine","learning","focus"],
-      a:"Today I am building AI products from discovery, applying agentic AI to real operational problems in freight: systems that perceive a workflow, decide, and act. My AI work grows out of a decade of operational freight data and production systems that run live carrier operations daily, so reliability and measurable customer value come first." },
+      a:"In 2026 I built three AI products. An MCP server for customer reporting, so customers ask their own questions through an AI assistant instead of waiting for custom reports. An appointment scheduling agent that recommends the best appointment for each load and books it by phone, text, email, and browser use on portals with no API. And a shipment tracking product for LTL carriers. A cross dock automation product is in development with two carriers." },
     { id:"press", section:"Press", anchor:"#press", strong:["press","news","coverage","media","dc","velocity","prweb"], kw:["covered","articles","quoted","recognition","award","published"],
-      a:"The trade press has covered the RouteMax rollouts, and I am quoted in several of the pieces: DC Velocity, PRWeb, GlobeNewswire, and IT Supply Chain. The six articles are listed under Press below, including the Southeastern Freight Lines rollout and a Top Supply Chain Project award for a deployment at Saia." },
+      a:"Trade press has covered the platform rollouts I led: DC Velocity, PRWeb, GlobeNewswire, and IT Supply Chain. The articles are listed under Press below, including a Top Supply Chain Project award for one deployment." },
     { id:"contact", section:"Contact", anchor:"#contact", strong:["contact","email","reach","linkedin","github"], kw:["write","connect","talk","touch","message"],
       a:"Email is fastest: rambabu.1990@gmail.com. I am also on LinkedIn at linkedin.com/in/rambabu-yadlapalli and on GitHub as RamYadlapalli." },
     { id:"career", section:"Career path", anchor:"#background", strong:["career","maq","teleparadigm","microsoft","starbucks","amazon","hyderabad","experience","background","history"], kw:["started","jobs","worked","years"],
-      a:"I started in 2011 at Teleparadigm Networks, developing iOS applications, one of them for Sydney Airport. Then six years at MAQ Software, building enterprise applications for Microsoft, Starbucks, and Amazon. I joined Optym in 2017 as a Senior Software Engineer and was promoted five times to VP of Product and Engineering. I now lead a 30-person product and engineering organization, with P&L responsibility for the business unit." },
+      a:"I started in 2011 at Teleparadigm Networks, developing iOS applications, two of them for an Australian client. Then MAQ Software from 2011 to 2017, building enterprise applications for Microsoft, Starbucks, and Amazon, and leading a team of 10 from 2015. I joined my current company in Dallas in 2017 as a Senior Software Engineer and was promoted five times to Vice President of Product Development and Engineering. I lead a 30 person organization and own the product roadmap and business unit P&L." },
     { id:"education", section:"Career path", anchor:"#background", strong:["education","degree","college","university","jntu","certifications"], kw:["studied","school","btech","engineering"],
-      a:"B.Tech, Computer Science and Engineering, JNTU Hyderabad, 2007 to 2011." },
+      a:"B.Tech, Computer Science and Engineering, Younis Sultan College of Engineering, JNTU Hyderabad, 2007 to 2011. I also hold nine Microsoft certifications." },
     { id:"skills", section:"AI Work", anchor:"#ai", strong:["skills","stack","kubernetes","react","architecture","technical","technologies"], kw:["tools","hands","code","development"],
-      a:"I lead product and engineering as one team and stay hands-on in architecture, code, and production problem solving. My core strengths are product discovery and strategy, engineering leadership, system architecture, problem solving and root cause analysis, and enterprise implementation and support." },
-    { id:"tracking", section:"RouteMax", anchor:"#routemax", strong:["tracking","shipment","shipments","shipping"], kw:["track","delivery","pickup","visibility"],
-      a:"I designed and developed RouteMax's shipment tracking capability end to end, enabling customers to track every shipment from pickup to delivery." },
+      a:"TypeScript, React, React Native, Node.js, Python, .NET, Azure (AKS, Azure SQL, Service Bus), Kubernetes, Helm, Terraform, Docker, Redis, Keycloak, Datadog, and CockroachDB. I build MCP servers and agentic AI applications, including voice agents and browser use agents. I stay in the architecture and the code." },
+    { id:"tracking", section:"AI work in 2026", anchor:"#ai", strong:["tracking","shipment","shipments","shipping"], kw:["track","delivery","pickup","visibility"],
+      a:"I built Shipment Tracking in April 2026, from scratch: carriers and their customers track a shipment from pickup to delivery, with ETAs, live driver location, and PO and BOL lookups. I wrote 65 of its 68 commits." },
     { id:"location", section:"About", anchor:"#about", strong:["dallas","texas","location","based"], kw:["where","live","city"],
-      a:"I am based in Dallas, Texas. Optym is a Dallas company. I began my career in Hyderabad, India." },
+      a:"I am based in Dallas, Texas. I began my career in Hyderabad, India." },
     { id:"role", section:"Career path", anchor:"#background", strong:["vp","vice","title","role"], kw:["current","job","position","do"],
-      a:"I am VP of Product and Engineering at Optym, a role I have held since January 2026. I lead a 30-person product and engineering organization, with P&L responsibility for the business unit." }
+      a:"I am Vice President of Product Development and Engineering, a role I have held since January 2026. I lead a 30 person organization through engineering managers, and I own engineering, the product roadmap, and the business unit P&L." }
   ];
   var STOP = ["what","is","your","you","the","a","an","of","in","on","at","to","do","does","did","have","has","are","was","were","i","me","my","it","this","that","and","or","for","with","about","tell","please","can","could","would","should","how","where","when","who","why","any","some","much","many","get","got"];
   function hit(list, t){
@@ -320,7 +315,7 @@
     return { a: ad, s: sd };
   }
   function careerSummary(){
-    return { a: "Ram Yadlapalli is VP of Product and Engineering at Optym in Dallas, where he built RouteMax, an LTL routing platform, from the ground up over nine years and five promotions. Earlier he built enterprise applications for Microsoft, Starbucks, and Amazon at MAQ Software. Today he is building AI products from discovery, working field first with customers.", s: 'Source: About and Background · <a href="#background">read in context</a> · page text' };
+    return { a: "Ram Yadlapalli is Vice President of Product Development and Engineering in Dallas. He led the 2018 rebuild of a First Mile and Last Mile Optimization and execution product for LTL carriers, now in production at 11 carriers, and in 2026 he built an MCP server, a shipment tracking product, and an appointment scheduling agent. Earlier he built enterprise applications for Microsoft, Starbucks, and Amazon at MAQ Software.", s: 'Source: About and Background · <a href="#background">read in context</a> · page text' };
   }
   async function answer(q){
     q = (q || '').trim();
@@ -353,7 +348,7 @@
       slot.a.textContent = entry.a;
       slot.s.innerHTML = 'Source: ' + entry.section + ' · <a href="' + entry.anchor + '">read in context</a> · page text';
     } else {
-      slot.a.textContent = 'That is not covered on this page, and this page only answers from what is published here. Try asking about his AI work, RouteMax, how he works with customers, his background, or the press coverage.';
+      slot.a.textContent = 'That is not covered on this page, and this page only answers from what is published here. Try asking about his AI work, the platform, how he works with customers, his background, or the press coverage.';
       slot.s.textContent = 'No source matched.';
     }
   }
@@ -370,14 +365,14 @@
   var fitOut = document.getElementById('fitOut');
   document.getElementById('sampleBtn').addEventListener('click', function(){ jdInput.value = SAMPLE_JD; });
   var FIT_GROUPS = [
-    { name: "AI and agents", jd: ["ai","ml","llm","agent","agentic","genai","machine learning","artificial intelligence"], ev: "Building AI products from discovery, applying agentic AI to real operational problems." },
-    { name: "Engineering leadership", jd: ["lead","leading","manager","managers","director","vp","team","organization","org","mentor"], ev: "Leads a 30-person product and engineering organization as VP of Product and Engineering, with five promotions at Optym since 2017." },
-    { name: "Product ownership", jd: ["roadmap","product","strategy","discovery","pricing","vision"], ev: "Leads product and engineering as one team; owned product definition and roadmap for RouteMax end to end." },
-    { name: "Zero to scale", jd: ["zero","0 to 1","0-to-1","build","scale","scaling","greenfield","from scratch"], ev: "Conceived RouteMax and built it from zero into production at enterprise LTL carriers across the US and Canada." },
-    { name: "Cloud and platform", jd: ["kubernetes","k8s","azure","aws","gcp","cloud","platform","distributed","real-time","real time"], ev: "Hands-on in system architecture and Kubernetes deployment across the full lifecycle." },
-    { name: "Enterprise customers", jd: ["enterprise","customer","customers","implementation","field","client","stakeholder"], ev: "Field first: about half his time onsite at carrier terminals during build and rollout, working directly with customers on value realization." },
-    { name: "Logistics domain", jd: ["logistics","freight","carrier","carriers","ltl","trucking","fleet","supply chain","routing","shipment"], ev: "Deep LTL domain depth: RouteMax serves enterprise LTL carriers, with press-covered rollouts at SEFL, Yellow, Frozen Food Express, and Saia." },
-    { name: "Production discipline", jd: ["production","reliability","root cause","incident","on-call","on call","sre","quality"], ev: "Leads root cause analysis on complex production issues across carrier deployments; rigorous, first-principles problem solving." }
+    { name: "AI and agents", jd: ["ai","ml","llm","agent","agentic","genai","machine learning","artificial intelligence"], ev: "Built an MCP server, an appointment scheduling agent, and a shipment tracking product in 2026." },
+    { name: "Engineering leadership", jd: ["lead","leading","manager","managers","director","vp","team","organization","org","mentor"], ev: "Leads a 30 person product and engineering organization through engineering managers, with five promotions since 2017. Managed teams since 2015." },
+    { name: "Product ownership", jd: ["roadmap","product","strategy","discovery","pricing","vision"], ev: "Owns engineering, the product roadmap, and the business unit P&L." },
+    { name: "Zero to scale", jd: ["zero","0 to 1","0-to-1","build","scale","scaling","greenfield","from scratch"], ev: "Led the 2018 rebuild of the platform, now in production at 11 LTL carriers, and created three new products in 2026." },
+    { name: "Cloud and platform", jd: ["kubernetes","k8s","azure","aws","gcp","cloud","platform","distributed","real-time","real time"], ev: "Architecture and code: about 4,220 commits on the platform, second highest of 100+ authors. Kubernetes, Azure, TypeScript, React, Node.js, .NET." },
+    { name: "Enterprise customers", jd: ["enterprise","customer","customers","implementation","field","client","stakeholder"], ev: "About half his time onsite at carrier terminals and riding with drivers during the build and rollout years, working directly with customers." },
+    { name: "Logistics domain", jd: ["logistics","freight","carrier","carriers","ltl","trucking","fleet","supply chain","routing","shipment"], ev: "The platform serves LTL carriers in the US and Canada: nearly 20,000 drivers and about 1,000 planners and dispatchers use it daily." },
+    { name: "Production discipline", jd: ["production","reliability","root cause","incident","on-call","on call","sre","quality"], ev: "Removed retry storms against a carrier API and set explicit timeouts in the dispatch orchestrator. Hotfix branches fell from 45 in 2023 to 2 in 2026." }
   ];
   function fitFallback(jd){
     var low = " " + jd.toLowerCase() + " ";
@@ -391,14 +386,14 @@
     lines.push("Fit brief (topic check from the page text; the in-browser model writes a fuller brief when it can run):");
     lines.push("");
     lines.push("Strong matches:");
-    matched.slice(0, 5).forEach(function(g){ lines.push("• " + g.name + " — " + g.ev); });
+    matched.slice(0, 5).forEach(function(g){ lines.push("• " + g.name + ": " + g.ev); });
     if (missed.length){
       lines.push("");
       lines.push("Not evidenced on this page:");
       lines.push("• " + missed.map(function(g){ return g.name; }).join(", ") + ". The profile does not speak to these, which is not the same as a no; it is a conversation starter.");
     }
     lines.push("");
-    lines.push("Opening line: I built RouteMax from the ground up and lead product and engineering as one team; happy to compare notes on the role.");
+    lines.push("Opening line: I lead a 30 person product and engineering organization and led the rebuild of our LTL platform, now in production at 11 carriers. Happy to compare notes on the role.");
     return lines.join("\n");
   }
   fitBtn.addEventListener('click', async function(){
@@ -413,7 +408,7 @@
     if (engine){
       ad.textContent = "Comparing against the profile…";
       try {
-        var sys = SYSTEM + "\n\nTASK: The visitor pasted a job description. Compare it to the profile ONLY. Produce exactly these parts: (1) 'Fit:' one sentence verdict. (2) 'Strong matches:' up to 3 short bullets tying job requirements to profile facts. (3) 'Worth a conversation:' up to 2 honest gaps the profile does not cover. (4) 'Opening line:' one sentence Ram could use to introduce himself for this role, written in the first person as Ram. Never invent experience. At most 200 words.";
+        var sys = SYSTEM + "\n\nTASK: The visitor pasted a job description. Compare it to the profile ONLY. Produce exactly these parts: (1) 'Fit:' one sentence verdict. (2) 'Strong matches:' up to 3 short bullets tying job requirements to profile facts. (3) 'Worth a conversation:' up to 2 gaps the profile does not cover. (4) 'Opening line:' one sentence Ram could use to introduce himself for this role, written in the first person as Ram. Never invent experience. At most 200 words.";
         var reply = await engine.chat.completions.create({ messages: [{ role: "system", content: sys }, { role: "user", content: "JOB DESCRIPTION:\n" + jd.slice(0, 6000) }], temperature: 0.3, max_tokens: 420 });
         var out = (reply.choices[0].message.content || "").trim();
         ad.textContent = out || "The model returned an empty brief. The topic check below may still help.";
@@ -423,7 +418,7 @@
     }
     var fb = fitFallback(jd);
     if (fb){ ad.textContent = fb; sd.textContent = "Topic check from the page text. When the in-browser model is available, it writes the full brief instead."; }
-    else { ad.textContent = "This job description shares almost no topics with the profile on this page, so an honest fit brief would be mostly gaps. The profile covers AI products, engineering and product leadership, and freight operations software."; sd.textContent = "No topic overlap found."; }
+    else { ad.textContent = "This job description shares almost no topics with the profile on this page, so a fit brief would be mostly gaps. The profile covers AI products, engineering and product leadership, and freight operations software."; sd.textContent = "No topic overlap found."; }
   });
 
   /* ---------- embedded in-browser model (background enhancement) ---------- */
@@ -444,7 +439,7 @@
       engine = eng;
       progress.style.display = 'none';
       engineLabel.textContent = 'Engine: Qwen 2.5 · in your browser';
-      status.textContent = 'Model ready: Qwen 2.5 (0.5B) is running in this tab and now phrases the answers, and powers the fit check below, still grounded only in the profile on this page.';
+      status.textContent = 'Model ready: Qwen 2.5 (0.5B) is running in this tab and now phrases the answers, and powers the fit check below, using only the profile on this page.';
     } catch (err) {
       progress.style.display = 'none';
       status.textContent = 'Answers come from the page text. The embedded model could not be loaded in this browser, so answers will stay on the page text.';

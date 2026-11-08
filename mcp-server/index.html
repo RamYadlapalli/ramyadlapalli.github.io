@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How We Built an MCP Server on Our Existing APIs — Ram Yadlapalli</title>
-<meta name="description" content="How we built a production MCP server on top of existing reporting APIs, identity, and Kubernetes: OAuth with PKCE, multi-tenancy, tool design, performance, and what comes next. By Ram Yadlapalli, VP of Product & Engineering.">
+<title>How We Built an MCP Server on Our Existing APIs | Ram Yadlapalli</title>
+<meta name="description" content="How we built a production MCP server on top of existing reporting APIs, identity, and Kubernetes: OAuth with PKCE, multi-tenancy, tool design, performance, and what comes next. By Ram Yadlapalli, VP of Product Development and Engineering.">
 <meta name="author" content="Ram Yadlapalli">
 <link rel="canonical" href="https://ramyadlapalli.github.io/mcp-server/">
 <meta property="og:type" content="article">
@@ -12,10 +12,10 @@
 <meta property="og:description" content="A production MCP server built by reuse: the same reporting APIs, identity provider, and Kubernetes cluster. Tool design, OAuth, multi-tenancy, and performance, by Ram Yadlapalli.">
 <meta property="og:url" content="https://ramyadlapalli.github.io/mcp-server/">
 <meta name="twitter:card" content="summary">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <style>
-  :root{color-scheme:light dark;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad;--code:#f6f6f6;--diag:#fafafa}
-  @media (prefers-color-scheme: dark){:root{--bg:#111214;--ink:#ececec;--dim:#aaa;--faint:#888;--line:#2a2c30;--acc:#7d9bff;--code:#1b1d21;--diag:#17181b}}
+  :root{color-scheme:light;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad;--code:#f6f6f6;--diag:#fafafa}
+  }
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
   .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
@@ -60,7 +60,7 @@
   </header>
 
   <h1>How We Built an MCP Server on Our Existing APIs</h1>
-  <p class="byline">Ram Yadlapalli · VP of Product &amp; Engineering, Optym · Dallas · November 2026 · 14 min read</p>
+  <p class="byline">Ram Yadlapalli · VP of Product Development and Engineering · Dallas · November 2026 · 14 min read</p>
   <p class="lede">We built an MCP server for our product in a few weeks. Most of it was reuse: the same reporting APIs, the same identity provider, the same Kubernetes cluster and pipeline. This is a write-up of what we did, what worked, and what we plan next.</p>
 
   <div class="toc"><p>Contents</p><ul><li><a href="#why">Why</a></li><li><a href="#what-mcp-is">What MCP is</a></li><li><a href="#where-the-tools-get-data">Where the tools get data</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#authentication">Authentication</a></li><li><a href="#multi-tenancy">Multi tenancy</a></li><li><a href="#tool-design">Tool design</a></li><li><a href="#performance">Performance</a></li><li><a href="#hosting">Hosting</a></li><li><a href="#connecting-claude">Connecting Claude</a></li><li><a href="#what-we-learned">What we learned</a></li><li><a href="#next-phase-microsoft-fabric-for-analytics">Next phase: Microsoft Fabric for analytics</a></li><li><a href="#other-next-steps">Other next steps</a></li></ul></div>
@@ -341,13 +341,12 @@
   </article>
 
   <footer class="site">
-    <p><b>Ram Yadlapalli</b> is VP of Product &amp; Engineering at Optym in Dallas, where he built a pickup and delivery optimization and execution platform for LTL carriers from the ground up and now builds AI products on top of it. <a href="../">More about my work</a> · <a href="mailto:rambabu.1990@gmail.com">Get in touch</a></p>
+    <p><b>Ram Yadlapalli</b> is VP of Product Development and Engineering in Dallas. He led the rebuild of a First Mile and Last Mile Optimization and execution product for LTL carriers, and built an MCP server, a shipment tracking product, and an appointment scheduling agent in 2026. <a href="../">More about my work</a> · <a href="mailto:rambabu.1990@gmail.com">Get in touch</a></p>
   </footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
-  var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  mermaid.initialize({startOnLoad:true, theme: dark ? "dark" : "default", securityLevel:"strict"});
+  mermaid.initialize({startOnLoad:true, theme: "default", securityLevel:"strict"});
 </script>
 </body>
 </html>
