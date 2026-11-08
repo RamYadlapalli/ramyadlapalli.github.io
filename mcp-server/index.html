@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How We Built an MCP Server on Our Existing APIs — Ram Yadlapalli</title>
+<meta name="description" content="How we built a production MCP server on top of existing reporting APIs, identity, and Kubernetes: OAuth with PKCE, multi-tenancy, tool design, performance, and what comes next. By Ram Yadlapalli, VP of Product & Engineering.">
+<meta name="author" content="Ram Yadlapalli">
+<link rel="canonical" href="https://ramyadlapalli.github.io/mcp-server/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How We Built an MCP Server on Our Existing APIs">
+<meta property="og:description" content="A production MCP server built by reuse: the same reporting APIs, identity provider, and Kubernetes cluster. Tool design, OAuth, multi-tenancy, and performance, by Ram Yadlapalli.">
+<meta property="og:url" content="https://ramyadlapalli.github.io/mcp-server/">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root{color-scheme:light dark;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad;--code:#f6f6f6;--diag:#fafafa}
+  @media (prefers-color-scheme: dark){:root{--bg:#111214;--ink:#ececec;--dim:#aaa;--faint:#888;--line:#2a2c30;--acc:#7d9bff;--code:#1b1d21;--diag:#17181b}}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+  header.site{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:36px}
+  header.site .name{font-weight:700;font-size:17px;color:var(--ink);text-decoration:none}
+  header.site nav{display:flex;gap:18px;font-size:14.5px}
+  header.site nav a{color:var(--dim);text-decoration:none}
+  header.site nav a:hover{color:var(--ink)}
+  @media(max-width:520px){header.site nav{display:none}}
+  h1{font-size:34px;line-height:1.2;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .byline{color:var(--dim);font-size:15px;margin-bottom:8px}
+  .lede{font-size:18px;color:var(--dim);margin-bottom:28px}
+  .toc{border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:0 0 36px;background:var(--diag)}
+  .toc p{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:8px}
+  .toc ul{list-style:none}
+  .toc li{margin:4px 0;font-size:15.5px}
+  .toc a{color:var(--acc);text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  article h2{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:38px 0 12px}
+  article h3{font-size:19px;font-weight:700;margin:28px 0 10px}
+  article p{margin-bottom:14px}
+  article ul,article ol{margin:0 0 14px 22px}
+  article li{margin-bottom:6px}
+  article a{color:var(--acc)}
+  article code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;background:var(--code);padding:1px 5px;border-radius:4px}
+  article pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;margin-bottom:16px}
+  article pre code{background:none;padding:0}
+  article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:15.5px}
+  article th,article td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  article th{background:var(--diag)}
+  .diagram{background:var(--diag);border:1px solid var(--line);border-radius:8px;padding:16px;margin:0 0 18px;overflow-x:auto;text-align:center}
+  .diagram pre.mermaid{background:none;border:none;padding:0;margin:0;font-size:14px;line-height:1.4}
+  footer.site{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;color:var(--dim);font-size:15px}
+  footer.site a{color:var(--acc);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="name" href="../">Ram Yadlapalli</a>
+    <nav><a href="../#ai">AI Work</a><a href="../#background">Experience</a><a href="../#about">About</a><a href="../#contact">Contact</a></nav>
+  </header>
+
+  <h1>How We Built an MCP Server on Our Existing APIs</h1>
+  <p class="byline">Ram Yadlapalli · VP of Product &amp; Engineering, Optym · Dallas · November 2026 · 14 min read</p>
+  <p class="lede">We built an MCP server for our product in a few weeks. Most of it was reuse: the same reporting APIs, the same identity provider, the same Kubernetes cluster and pipeline. This is a write-up of what we did, what worked, and what we plan next.</p>
+
+  <div class="toc"><p>Contents</p><ul><li><a href="#why">Why</a></li><li><a href="#what-mcp-is">What MCP is</a></li><li><a href="#where-the-tools-get-data">Where the tools get data</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#authentication">Authentication</a></li><li><a href="#multi-tenancy">Multi tenancy</a></li><li><a href="#tool-design">Tool design</a></li><li><a href="#performance">Performance</a></li><li><a href="#hosting">Hosting</a></li><li><a href="#connecting-claude">Connecting Claude</a></li><li><a href="#what-we-learned">What we learned</a></li><li><a href="#next-phase-microsoft-fabric-for-analytics">Next phase: Microsoft Fabric for analytics</a></li><li><a href="#other-next-steps">Other next steps</a></li></ul></div>
+
+  <article>
+<h2 id="why">Why</h2>
+<p>Our customers have a lot of operational data in our product: orders, events, exceptions, team and location performance. Today they see it through report screens. When they have a question the screens don't answer, it becomes a feature request or an Excel export.</p>
+<p>Most of our customers already use an AI assistant. So the ask was: let them connect their own assistant to their data in our product, with the same permissions they have in the web app. No new copy of the data, no new login.</p>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    subgraph Today
+        Q1[New question] --&gt; F1[Feature request] --&gt; F2[Report built&lt;br/&gt;weeks later] --&gt; F3[Answer]
+        Q1 --&gt; E1[Export to&lt;br/&gt;Excel] --&gt; F3
+    end
+    subgraph With MCP
+        Q2[Question in&lt;br/&gt;plain language] --&gt; AI[AI assistant] --&gt; T[MCP tools] --&gt; A2[Answer and chart]
+    end</pre></div>
+<h2 id="what-mcp-is">What MCP is</h2>
+<p>MCP (Model Context Protocol) is an open standard for connecting AI assistants to other systems. A server exposes tools. Each tool has a name, typed inputs and a description. The assistant reads the descriptions, decides which tools to call and uses the results in its answer. Since it is a standard, one server works with Claude, other assistants, IDEs and the customer's own agents.</p>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    C1[Claude] --&gt; S
+    C2[Other AI assistants] --&gt; S
+    C3[IDE and agent tools] --&gt; S
+    C4[Customer&#x27;s own agent] --&gt; S
+    S[MCP server] --&gt; P[(Operational data)]</pre></div>
+<p>We looked at two other options before choosing MCP:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Why not</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build our own chatbot</td>
+<td>We would own the model, the UI and the cost. Customers already have assistants.</td>
+</tr>
+<tr>
+<td>Export data to a warehouse for AI</td>
+<td>New pipelines, stale data, a second permission model and a bigger security review.</td>
+</tr>
+<tr>
+<td>MCP server</td>
+<td>Chosen. Works with any assistant and uses our existing security.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-the-tools-get-data">Where the tools get data</h2>
+<p>There were three choices:</p>
+<ol>
+<li>A new data API built for AI.</li>
+<li>A warehouse or lakehouse loaded with reporting data.</li>
+<li>The reporting APIs our web app already uses.</li>
+</ol>
+<p>We went with the third. The reporting service already finds the tenant for each request and connects to that tenant's database, checks the user's permissions on every endpoint and reads through stored procedures that are tuned and tested.</p>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    Q{Where should the&lt;br/&gt;tools get data?}
+    Q --&gt; N[New data API]
+    Q --&gt; W[Warehouse or lakehouse]
+    Q --&gt; E[Existing reporting APIs]
+    N --&gt; N1[Duplicate tenancy,&lt;br/&gt;auth and queries]
+    W --&gt; W1[New pipelines,&lt;br/&gt;new permission model]
+    E --&gt; E1[Tenancy, permissions and&lt;br/&gt;queries already exist]
+    E1 --&gt; OK[Chosen for version 1]
+    W1 -. &quot;later, for analytics&quot; .-&gt; LT[See: Next phase]</pre></div>
+<p>So the MCP server only translates. A tool call comes in, it calls an existing endpoint and returns a compact JSON result. It has no database credentials. If a user can't see something in the web app, the assistant can't see it either.</p>
+<h2 id="architecture">Architecture</h2>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    U[User] --&gt; A[AI assistant&lt;br/&gt;any MCP client]
+    A -- &quot;MCP over HTTPS&lt;br/&gt;+ user&#x27;s access token&quot; --&gt; G[Ingress /&lt;br/&gt;API gateway]
+    G --&gt; M[MCP server&lt;br/&gt;stateless container]
+    M -- &quot;same token&lt;br/&gt;+ tenant header&quot; --&gt; R[Existing reporting API]
+    M -- &quot;same token&quot; --&gt; O[Existing app API&lt;br/&gt;e.g. location list]
+    R --&gt; D[(Tenant reporting&lt;br/&gt;database)]
+    A -. &quot;OAuth sign in&quot; .-&gt; I[Existing identity&lt;br/&gt;provider]
+    M -. &quot;verify token&lt;br/&gt;signature&quot; .-&gt; I</pre></div>
+<ul>
+<li><strong>AI assistant:</strong> any MCP client. We used Claude with a custom connector.</li>
+<li><strong>MCP server:</strong> a small TypeScript service on the official MCP SDK. It defines the tools, validates inputs, calls the APIs and trims the results.</li>
+<li><strong>Identity provider:</strong> our existing OpenID Connect provider, same one the web app uses.</li>
+<li><strong>Reporting API and database:</strong> no changes, except two new endpoints (see Performance below).</li>
+</ul>
+<h2 id="authentication">Authentication</h2>
+<p>We expected this to be the hardest part. It was mostly configuration, because MCP uses standard OAuth.</p>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant C as AI assistant
+    participant M as MCP server
+    participant I as Identity provider
+    participant R as Reporting API
+
+    C-&gt;&gt;M: Call /mcp (no token)
+    M--&gt;&gt;C: 401 + pointer to resource metadata
+    C-&gt;&gt;M: GET /.well-known/oauth-protected-resource
+    M--&gt;&gt;C: &quot;My authorization server is &lt;issuer&gt;&quot;
+    C-&gt;&gt;I: Discover endpoints, start sign in (PKCE)
+    I--&gt;&gt;C: User signs in as usual, gets access token
+    C-&gt;&gt;M: Call tool with Bearer token
+    M-&gt;&gt;M: Verify signature and issuer
+    M-&gt;&gt;R: Same request, same token
+    R--&gt;&gt;M: Data the user is allowed to see
+    M--&gt;&gt;C: Compact result</pre></div>
+<ul>
+<li><strong>Protected resource metadata (RFC 9728).</strong> For a request without a token, the server returns <code>401</code> with a <code>WWW-Authenticate</code> header. The header points to a small JSON document that tells the assistant which authorization server to use.</li>
+<li><strong>Authorization server metadata.</strong> Some clients look for discovery documents at specific well known paths, so we serve the identity provider's metadata at those paths too.</li>
+<li><strong>Authorization code flow with PKCE.</strong> The user signs in on the normal login page. PKCE secures the exchange without a client secret, since the assistant is a public client.</li>
+<li><strong>Token pass through.</strong> The server checks the token signature and issuer, then sends the same token to the APIs. The APIs enforce permissions the same way they do for the web app. The model never sees the token.</li>
+</ul>
+<h3 id="public-client-instead-of-dynamic-registration">Public client instead of dynamic registration</h3>
+<p>MCP clients can register themselves with the identity provider automatically (dynamic client registration). Many enterprise identity setups don't allow that. Our first try failed with a generic "couldn't register" error. We created one public client for MCP, allowed only the assistant's redirect URL, and entered that client ID in the connector settings. That fixed it.</p>
+<h3 id="token-claims">Token claims</h3>
+<p>Our APIs filter data using claims in the token, for example which locations a user can see and which roles they have. A new client doesn't get the same claims as the web app client by default, so we added the same claim mappers. Check this early. A valid token with a missing claim returns empty results, and it takes time to figure out why.</p>
+<h2 id="multi-tenancy">Multi tenancy</h2>
+<p>Each customer has its own subdomain and its own identity realm. The MCP server gets everything from the host name of the request:</p>
+<ul>
+<li>the tenant, sent as a header to the APIs so they connect to the right database,</li>
+<li>the expected token issuer, so a token from one tenant is rejected on another,</li>
+<li>the resource metadata URL it advertises.</li>
+</ul>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    H[&quot;Request host&lt;br/&gt;customer-a.example.com&quot;] --&gt; P[MCP server parses host]
+    P --&gt; T1[Tenant id&lt;br/&gt;customer-a]
+    P --&gt; T2[Expected issuer&lt;br/&gt;customer-a realm]
+    P --&gt; T3[Resource metadata URL]
+    T1 --&gt; API[Tenant header on&lt;br/&gt;every API call]
+    API --&gt; DB[(customer-a&lt;br/&gt;reporting database)]
+    T2 --&gt; V{Token issuer&lt;br/&gt;matches?}
+    V -- no --&gt; X[401 rejected]
+    V -- yes --&gt; API</pre></div>
+<p>One deployment serves all tenants on a cluster, with no per tenant configuration. Signing keys are fetched from each issuer and cached.</p>
+<h2 id="tool-design">Tool design</h2>
+<p>Most of the answer quality depends on this.</p>
+<ul>
+<li><strong>Small set of read only tools.</strong> We started with eight, covering a location list, KPI summary, team and location performance, exceptions, slowest events and record lookup. No write actions in version 1.</li>
+<li><strong>Write descriptions for the model.</strong> Each description says what the tool returns, what each input means and when to use it. For example, the location input says to call the location list first if the user gives a city name. With that one line, users can say "Chicago" instead of an internal code.</li>
+<li><strong>Summarize on the server.</strong> API responses built for screens can be hundreds of KB. We aggregate before returning, for example totals per team instead of every event. One response went from over 700 KB to under 50 KB. Smaller results are faster, cost fewer tokens and give more accurate answers.</li>
+<li><strong>Limit the size.</strong> Top 10 by default and row caps on everything.</li>
+<li><strong>Validate inputs.</strong> Zod schemas reject bad dates or missing fields before any API call, with an error message the model can act on.</li>
+<li><strong>Ask for charts.</strong> MCP servers can send instructions to the client. Ours asks for a chart when the result compares items or shows a trend.</li>
+</ul>
+<p>Example of one question turning into two tool calls. The model decides the order from the descriptions:</p>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant U as User
+    participant A as AI assistant
+    participant M as MCP server
+    U-&gt;&gt;A: &quot;Where are the biggest delays at our Chicago site this month?&quot;
+    A-&gt;&gt;M: list_locations(search: &quot;Chicago&quot;)
+    M--&gt;&gt;A: Chicago = location code CHI
+    A-&gt;&gt;M: get_slowest_events(location: CHI, from, to)
+    M--&gt;&gt;A: Top 10 items with average delay minutes
+    A--&gt;&gt;U: Bar chart + explanation + suggested actions</pre></div>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    R[Raw API response&lt;br/&gt;every record, every event&lt;br/&gt;~700 KB] --&gt; S[MCP server&lt;br/&gt;aggregate, rank, top N] --&gt; O[Tool result&lt;br/&gt;per team totals&lt;br/&gt;under 50 KB]</pre></div>
+<h2 id="performance">Performance</h2>
+<p>Two of our questions ("longest delays last month" and "exceptions by location") took several minutes in the first version. The queries were parsing large JSON event records across millions of rows on every call.</p>
+<p>We fixed it with regular database work:</p>
+<ul>
+<li>a summary table with one row per event and the duration and exception flags already calculated,</li>
+<li>a stored procedure that refreshes it for a date range,</li>
+<li>two small query stored procedures behind two new reporting endpoints.</li>
+</ul>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    subgraph Before[&quot;Before: minutes&quot;]
+        Q1[Tool call] --&gt; J[Parse JSON events&lt;br/&gt;across millions of rows] --&gt; A1[Answer]
+    end
+    subgraph After[&quot;After: under a second&quot;]
+        S[Scheduled refresh&lt;br/&gt;stored procedure] --&gt; T[(Event&lt;br/&gt;summary table)]
+        Q2[Tool call] --&gt; P[Small query&lt;br/&gt;stored procedure] --&gt; T
+        P --&gt; A2[Answer]
+    end</pre></div>
+<p>Both now return in under a second.</p>
+<p>In our tests, the MCP server and APIs take about 0.1 to 2.5 seconds per tool call. Most of the remaining time is the model thinking and writing. A faster model, lower reasoning effort, simple charts and small results help more than tuning the server further.</p>
+<h2 id="hosting">Hosting</h2>
+<p>Nothing new was set up.</p>
+<ul>
+<li><strong>Container:</strong> a small multi stage Docker image.</li>
+<li><strong>Kubernetes:</strong> one more subchart in the existing Helm release, in the same cluster and namespace as the APIs. It calls them by internal service name, so tool traffic stays inside the cluster.</li>
+<li><strong>Ingress:</strong> new routes on the existing gateway for <code>/mcp</code> and the well known discovery paths. The server runs on the tenant's existing host name.</li>
+<li><strong>Stateless transport:</strong> MCP Streamable HTTP in stateless mode. Each request gets a new server and transport, so no sticky sessions and it scales horizontally.</li>
+<li><strong>CI/CD:</strong> the existing pipeline builds, scans and pushes the image with the other services.</li>
+</ul>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    subgraph CI[&quot;CI/CD pipeline (existing)&quot;]
+        B[Build image] --&gt; SC[Security scan] --&gt; PU[Push to registry]
+    end
+    PU --&gt; HL[Helm release&lt;br/&gt;new subchart added]
+    subgraph K[&quot;Kubernetes cluster (existing)&quot;]
+        IN[Ingress gateway&lt;br/&gt;+ /mcp and well known routes] --&gt; MS[MCP server pods&lt;br/&gt;stateless]
+        MS --&gt; RS[Reporting API service]
+        MS --&gt; AS[App API service]
+        IN --&gt; WEB[Web app]
+    end
+    HL --&gt; MS
+    Internet[AI assistant] --&gt; IN</pre></div>
+<p>Few things we ran into:</p>
+<ul>
+<li>Our build installs all workspace packages at once. Adding the MCP server to the main backend workspace pushed a code analysis step over its memory limit. Moving it to its own folder fixed it.</li>
+<li>After a deploy, the gateway can take a minute or more to pick up new pods. Run at least two replicas for anything you demo live.</li>
+<li>Our database deployment is incremental and skips new tables, so the summary table needed a release script.</li>
+</ul>
+<h2 id="connecting-claude">Connecting Claude</h2>
+<p>This took a few minutes:</p>
+<ol>
+<li>An org admin adds a custom connector with the MCP URL.</li>
+<li>In advanced settings, the admin sets our public client ID (no secret).</li>
+<li>Each user clicks Connect and signs in on the normal login page.</li>
+</ol>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A1[Admin adds custom&lt;br/&gt;connector with MCP URL] --&gt; A2[Admin sets public&lt;br/&gt;client id, no secret]
+    A2 --&gt; U1[User clicks Connect]
+    U1 --&gt; U2[Normal login page]
+    U2 --&gt; U3[Tools available in chat]</pre></div>
+<p>After that, a user can ask "How did the Chicago site do last Monday? Show it as a dashboard" and get the answer with charts.</p>
+<h2 id="what-we-learned">What we learned</h2>
+<ol>
+<li>The existing APIs already handled tenancy and permissions. That is why the MCP server is only a few hundred lines.</li>
+<li>Standard OAuth was enough. Resource metadata, PKCE and a public client worked with our identity provider without custom auth code.</li>
+<li>Tool descriptions, result size and defaults matter more than the number of tools.</li>
+<li>If a question is slow in SQL, it is slower through an assistant. Precompute it.</li>
+<li>Treat a live demo like a release: sign in beforehand, two replicas, and questions that return in seconds.</li>
+</ol>
+<h2 id="next-phase-microsoft-fabric-for-analytics">Next phase: Microsoft Fabric for analytics</h2>
+<p>Version 1 is good for questions about the current operation ("how is today going?"). It is not a good fit for deeper analysis:</p>
+<ul>
+<li>The reporting APIs are built for screens, so questions across months or many locations need many calls.</li>
+<li>Every slow question needs its own summary table and stored procedure in the operational database.</li>
+<li>Analytics queries run on the same databases as the live application.</li>
+<li>Combining our data with other sources (finance, IoT, customer service) is hard.</li>
+</ul>
+<p>The plan is to move analytics to a lakehouse on Microsoft Fabric. The MCP server stays the entry point for assistants.</p>
+<h3 id="target-architecture">Target architecture</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    subgraph Ops[&quot;Operational databases (per tenant)&quot;]
+        P[(Database A)]
+        D[(Database B)]
+        R[(Reporting)]
+        T[(Database C)]
+    end
+    subgraph Fabric[&quot;Microsoft Fabric (OneLake)&quot;]
+        BR[Bronze&lt;br/&gt;raw mirrored tables]
+        SI[Silver&lt;br/&gt;cleaned, conformed,&lt;br/&gt;JSON flattened]
+        GO[Gold&lt;br/&gt;business metrics&lt;br/&gt;and KPIs]
+        SM[Semantic model&lt;br/&gt;shared definitions&lt;br/&gt;+ row level security]
+        BR --&gt; SI --&gt; GO --&gt; SM
+    end
+    P &amp; D &amp; R &amp; T -- &quot;mirroring / CDC&quot; --&gt; BR
+    X[Other sources&lt;br/&gt;IoT, finance,&lt;br/&gt;service tickets] --&gt; BR
+    M[MCP server] -- &quot;today&#x27;s operation&quot; --&gt; API[Existing APIs]
+    M -- &quot;history, trends, cross location&quot; --&gt; SM
+    A[AI assistants] --&gt; M
+    BI[Dashboards and BI] --&gt; SM</pre></div>
+<h3 id="how-it-works">How it works</h3>
+<ul>
+<li><strong>Ingestion:</strong> mirror the operational databases into OneLake using database mirroring or CDC. No export jobs to maintain, and data lands in minutes.</li>
+<li><strong>Bronze, silver, gold:</strong> bronze has the raw copies. Silver flattens the JSON payloads, standardizes codes and joins related records. Gold has business tables, the same kind of summaries we built by hand for the slow questions, for all metrics and full history.</li>
+<li><strong>Semantic model:</strong> metric definitions (what is "on time", how a delay is measured) are defined once and used by both dashboards and AI tools, so both give the same number.</li>
+<li><strong>Security:</strong> tenant isolation with separate workspaces or row level security. User filters such as location access come from the same identity claims the APIs use today.</li>
+<li><strong>Routing in the MCP server:</strong> tool names and inputs stay the same. Questions about today go to the APIs. Questions about history and trends go to the semantic model. The assistant doesn't need to know which one answered.</li>
+<li><strong>Fewer stored procedures:</strong> a new question becomes a gold table or a measure, and analytics load moves off the production databases.</li>
+<li><strong>More tools later:</strong> with clean, documented data we can add broader tools, for example querying any metric in the semantic model, and combine sources.</li>
+</ul>
+<h3 id="phases">Phases</h3>
+<div class="diagram"><pre class="mermaid">timeline
+    title Roadmap
+    Phase 1 (done) : MCP server over existing APIs : Read only tools : OAuth with existing identity provider : Summary tables for slow questions
+    Phase 2 : Mirror operational databases into the lakehouse : Bronze and silver : First gold tables for core KPIs
+    Phase 3 : Semantic model with shared metric definitions : Row level security per tenant and user : MCP tools for history and trends
+    Phase 4 : More sources such as IoT and finance : Broader query tools : Write actions with human approval</pre></div>
+<p>For customers nothing changes. Same assistant, same login, same permissions.</p>
+<h2 id="other-next-steps">Other next steps</h2>
+<ul>
+<li>Finer scopes, so a customer can give the assistant less access than the full user has.</li>
+<li>Audience restriction on tokens issued for the MCP client.</li>
+<li>More tools, based on what customers actually ask.</li>
+<li>Write actions that only draft a change for a person to approve.</li>
+<li>Usage telemetry on which tools and questions get used.</li>
+</ul>
+<p>If you already have secure APIs and an identity provider, you don't need a new platform to get started. A thin MCP server on top of them is enough for version 1. See what people ask, then decide what to build behind it.</p>
+  </article>
+
+  <footer class="site">
+    <p><b>Ram Yadlapalli</b> is VP of Product &amp; Engineering at Optym in Dallas, where he built a pickup and delivery optimization and execution platform for LTL carriers from the ground up and now builds AI products on top of it. <a href="../">More about my work</a> · <a href="../#contact">Get in touch</a></p>
+  </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({startOnLoad:true, theme: dark ? "dark" : "default", securityLevel:"strict"});
+</script>
+</body>
+</html>
