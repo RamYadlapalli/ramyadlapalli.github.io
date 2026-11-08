@@ -3,448 +3,79 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ram Yadlapalli — VP of Product & Engineering | AI Products for Freight</title>
-<meta name="description" content="Ram Yadlapalli builds AI products for freight operations. Ask the embedded model in your browser anything about his work.">
+<title>Ram Yadlapalli — VP of Product & Engineering</title>
+<meta name="description" content="Ram Yadlapalli is VP of Product & Engineering at Optym in Dallas. He built a pickup and delivery platform for LTL carriers from the ground up and now builds AI products: production agents and an MCP server customers use every day.">
+<meta name="author" content="Ram Yadlapalli">
+<link rel="canonical" href="https://ramyadlapalli.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ram Yadlapalli — VP of Product & Engineering">
+<meta property="og:description" content="Engineering leader in Dallas. Built a pickup and delivery platform for LTL carriers from zero; now building AI products, agents, and MCP tooling on top of it.">
+<meta property="og:url" content="https://ramyadlapalli.github.io/">
+<meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="light dark">
 <style>
-  :root{
-    color-scheme:light dark;
-    --bg:#fbfbfc; --ink:#111318; --dim:#565d66; --faint:#8a9099;
-    --line:#e5e6ea; --card:#ffffff; --acc:#2f4bff; --accsoft:rgba(47,75,255,.07);
-    --bodytext:#2c313a; --inputbg:#ffffff; --inputborder:#d4d6db;
-    --ahead1:#ffffff; --ahead2:#f7f8ff; --btnhover:#000000; --btntext:#ffffff;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0e1013; --ink:#eef0f3; --dim:#a7adb8; --faint:#7d838d;
-      --line:#262a31; --card:#15181d; --acc:#7d9bff; --accsoft:rgba(125,155,255,.13);
-      --bodytext:#c9ced6; --inputbg:#101216; --inputborder:#333842;
-      --ahead1:#171a20; --ahead2:#12151b; --btnhover:#2a2e35; --btntext:#0e1013;
-    }
-  }
+  :root{color-scheme:light dark;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad}
+  @media (prefers-color-scheme: dark){:root{--bg:#111214;--ink:#ececec;--dim:#aaa;--faint:#888;--line:#2a2c30;--acc:#7d9bff}}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.62}
-  .page{max-width:880px;margin:0 auto;padding:0 24px 72px}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
+  .wrap{max-width:720px;margin:0 auto;padding:36px 20px 72px}
+  h1{font-size:32px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+  .role{color:var(--dim);font-size:17px;margin-bottom:22px}
+  p{margin-bottom:14px}
+  .links{font-size:15.5px;margin-bottom:8px}
+  .links a{color:var(--acc);text-decoration:none}
+  .links a:hover{text-decoration:underline}
+  h2{font-size:20px;font-weight:800;margin:36px 0 12px;padding-top:22px;border-top:1px solid var(--line)}
+  ul{list-style:none}
+  li{margin-bottom:8px}
   a{color:var(--acc);text-decoration:none}
   a:hover{text-decoration:underline}
-
-  header.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
-  .wordmark{font-weight:800;letter-spacing:-.01em;font-size:17px}
-  .wordmark span{color:var(--acc)}
-  nav.links{display:flex;gap:22px;font-size:14.5px}
-  nav.links a{color:var(--dim)}
-  nav.links a:hover{color:var(--ink);text-decoration:none}
-  @media(max-width:560px){nav.links{display:none}}
-
-  .hero{padding:56px 0 6px;text-align:left}
-  .eyebrow{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:700}
-  h1{font-size:clamp(42px,6.5vw,62px);font-weight:800;letter-spacing:-.03em;line-height:1.04;margin:14px 0 14px}
-  .lede{font-size:20px;color:var(--dim);max-width:640px}
-  .lede b{color:var(--ink)}
-
-  /* ask = the embedded model, hero centerpiece */
-  .askpanel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(17,19,24,.06);margin-top:34px;overflow:hidden}
-  .askpanel .ahead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--ahead1),var(--ahead2))}
-  .ahead .t{font-weight:700;font-size:15.5px}
-  .ahead .t .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc);margin-right:8px;vertical-align:2px}
-  .badge{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);background:var(--accsoft);border:1px solid rgba(47,75,255,.25);padding:3px 10px;border-radius:999px;font-weight:700}
-  .askpanel .abody{padding:20px}
-  .askrow{display:flex;gap:9px}
-  .askrow input{flex:1;min-width:0;font:inherit;font-size:16.5px;padding:12px 14px;border:1px solid var(--inputborder);border-radius:10px;background:var(--inputbg);color:var(--ink)}
-  .askrow input:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:transparent}
-  .btn{font:inherit;font-weight:700;padding:12px 22px;border:1px solid var(--ink);background:var(--ink);color:var(--btntext);border-radius:10px;cursor:pointer}
-  .btn:hover{background:var(--btnhover)}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
-  .chip{font:inherit;font-size:14px;color:var(--dim);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer}
-  .chip:hover{border-color:var(--acc);color:var(--ink)}
-  .note{font-size:13.5px;color:var(--faint);margin-top:13px}
-  progress{width:100%;height:8px;display:none;margin-top:10px;accent-color:var(--acc)}
-  .turn{border-top:1px solid var(--line);margin-top:16px;padding-top:15px}
-  .turn .q{font-weight:700;margin-bottom:4px}
-  .turn .a{color:var(--bodytext);white-space:pre-wrap}
-  .turn .src{font-size:12.5px;color:var(--faint);margin-top:7px}
-  .turn .src a{color:var(--acc)}
-
-  section.blk{margin-top:56px}
-  .shead{margin-bottom:18px}
-  .shead .tag{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:700}
-  h2{font-size:27px;font-weight:800;letter-spacing:-.02em;margin-top:5px}
-  section.blk p{color:var(--bodytext);margin-bottom:14px;max-width:720px}
-  section.blk p.dim{color:var(--dim)}
-
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  @media(max-width:820px){.cards{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
-  .card h3{font-size:17.5px;font-weight:800;margin-bottom:8px}
-  .card p{font-size:15.5px;color:var(--dim);margin:0}
-  .card .ic{width:34px;height:34px;border-radius:9px;background:var(--accsoft);border:1px solid rgba(47,75,255,.2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-  .card .ic svg{width:18px;height:18px;stroke:var(--acc);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-
-  .row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);align-items:baseline}
-  .row .rt{font-weight:650}
-  .row .ro{color:var(--dim);font-size:15px}
-  .row .ry{color:var(--faint);white-space:nowrap;font-size:15px}
-  @media(max-width:560px){.row{flex-direction:column;gap:1px}}
-
-  ul.press{list-style:none}
-  ul.press li{padding:11px 0;border-bottom:1px solid var(--line)}
-  ul.press .src{color:var(--faint);font-size:13px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:1px}
-  ul.press a{color:var(--ink);font-weight:600}
-  ul.press a:hover{color:var(--acc);text-decoration:none}
-  ul.plain{list-style:none}
-  ul.plain li{margin-bottom:8px;color:var(--bodytext)}
-  .sign{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
-  .fine{font-size:13.5px;color:var(--faint)}
+  .dim{color:var(--dim)}
+  .yr{color:var(--faint);font-size:15px}
+  footer{border-top:1px solid var(--line);margin-top:44px;padding-top:18px;color:var(--faint);font-size:14.5px}
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
 
-  <header class="top">
-    <div class="wordmark">Ram Yadlapalli<span>.</span></div>
-    <nav class="links">
-      <a href="#ai">AI Work</a><a href="#background">Experience</a><a href="#about">About</a><a href="#press">Press</a><a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <h1>Ram Yadlapalli</h1>
+  <p class="role">VP of Product &amp; Engineering at Optym · Dallas, Texas</p>
 
-  <div class="hero">
-    <div class="eyebrow">VP of Product &amp; Engineering · Optym · Dallas</div>
-    <h1>Building AI products for freight operations.</h1>
-    <p class="lede">I'm Ram Yadlapalli. I lead product and engineering as one team at Optym, where I built the RouteMax platform from the ground up. <b>Today my work is AI: agentic systems applied to real operational problems.</b> The fastest way to learn about it is to ask.</p>
+  <p>I lead product and engineering as one team. I built our pickup and delivery optimization and execution platform for LTL carriers from the ground up, and it runs live operations at carriers across the US and Canada every day.</p>
 
-    <div class="askpanel" id="ask">
-      <div class="ahead"><span class="t"><span class="dot"></span>Ask about my work</span><span class="badge" id="engineLabel">Engine: page text</span></div>
-      <div class="abody">
-        <form id="askForm">
-          <div class="askrow">
-            <input type="text" id="askInput" placeholder="What is his AI experience?" autocomplete="off" aria-label="Ask about Ram Yadlapalli's work">
-            <button class="btn" type="submit">Ask</button>
-          </div>
-        </form>
-        <div class="chips" id="chips">
-          <button class="chip" type="button">What is his AI experience?</button>
-          <button class="chip" type="button">What did he build at Optym?</button>
-          <button class="chip" type="button">How does he work with customers?</button>
-          <button class="chip" type="button">Summarize his career in three lines</button>
-          <button class="chip" type="button">How can I contact him?</button>
-        </div>
-        <progress id="modelProgress" max="1" value="0"></progress>
-        <p class="note" id="modelStatus">This page embeds an open-source language model, Qwen 2.5 (0.5B, Apache 2.0), that runs entirely in your browser with WebLLM. Answers start instantly from the page text while the model loads in the background (about 300 MB, once); once it is ready, the model phrases the answers itself, grounded only in the profile on this page. No server, no API key, and your questions never leave this tab.</p>
-        <div id="chat" aria-live="polite"></div>
-      </div>
-    </div>
+  <p>Today my work is AI applied to real operational problems: agentic products that book appointments by phone, text, and portal, and a production MCP server that lets customers ask their own data questions through their AI assistant. I stay hands-on in architecture and code, and I learned the business in the field, riding with drivers and working in carrier terminals.</p>
 
-  </div>
+  <p class="links"><a href="mailto:rambabu.1990@gmail.com">Email</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/rambabu-yadlapalli" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/RamYadlapalli" target="_blank" rel="noopener">GitHub</a></p>
 
-  <div class="askpanel" id="fit" style="margin-top:22px">
-    <div class="ahead"><span class="t"><span class="dot"></span>Fit check</span><span class="badge">For recruiters</span></div>
-    <div class="abody">
-      <p style="color:var(--dim);font-size:15.5px;margin-bottom:12px">Hiring for a role? Paste the job description and the model will compare it against my profile, on your machine, and write an honest fit brief: where I match, where I do not, and an opening line if you want to talk.</p>
-      <textarea id="jdInput" rows="6" placeholder="Paste a job description here…" aria-label="Paste a job description" style="width:100%;font:inherit;font-size:15.5px;padding:12px 14px;border:1px solid var(--inputborder);border-radius:10px;background:var(--inputbg);color:var(--ink);resize:vertical"></textarea>
-      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
-        <button class="btn" id="fitBtn" type="button">Analyze fit</button>
-        <button class="chip" id="sampleBtn" type="button" style="align-self:center">Use a sample job description</button>
-      </div>
-      <div id="fitOut" aria-live="polite"></div>
-    </div>
-  </div>
+  <h2>Writing</h2>
+  <ul>
+    <li><a href="mcp-server/">How We Built an MCP Server on Our Existing APIs</a><br>
+    <span class="dim">A production MCP server built by reuse: the same reporting APIs, identity provider, and Kubernetes cluster. OAuth, multi-tenancy, tool design, and performance.</span></li>
+  </ul>
 
-  <section class="blk" id="ai">
-    <div class="shead"><span class="tag">AI Work</span><h2>AI, front and center</h2></div>
-    <div class="cards">
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg></div>
-        <h3>Agentic AI products</h3>
-        <p>I am building AI products from discovery, applying agentic AI to real operational problems in freight: systems that perceive a workflow, decide, and act, with a human accountable for the outcome.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19H2"/></svg></div>
-        <h3>AI where reliability matters</h3>
-        <p>My platforms run live carrier operations every day, so AI ships with an operator's discipline: root cause analysis on production issues, measurable value for the customer, no demos that die in the field.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/></svg></div>
-        <h3>Hands-on leadership</h3>
-        <p>I stay in the architecture and the code while leading product and engineering as one team, with P&amp;L responsibility for the business unit. Strategy and implementation are the same conversation.</p>
-      </div>
-    </div>
-  </section>
+  <h2>Experience</h2>
+  <ul>
+    <li>VP of Product &amp; Engineering, Optym <span class="yr">· 2026 to present</span></li>
+    <li>Senior Director, Product Development &amp; Engineering, Optym <span class="yr">· 2024 to 2025</span></li>
+    <li>Director, Optym <span class="yr">· 2022 to 2023</span></li>
+    <li>Engineering Manager, Optym <span class="yr">· 2020 to 2021</span></li>
+    <li>Principal Software Engineer, Optym <span class="yr">· 2018 to 2019</span></li>
+    <li>Senior Software Engineer, Optym <span class="yr">· 2017</span></li>
+    <li>Senior Software Engineer, MAQ Software <span class="yr">· 2014 to 2017</span></li>
+    <li>Software Development Engineer, MAQ Software <span class="yr">· 2011 to 2014</span></li>
+    <li>B.Tech, Computer Science and Engineering, JNTU Hyderabad <span class="yr">· 2007 to 2011</span></li>
+  </ul>
 
-  <section class="blk" id="writing">
-    <div class="shead"><span class="tag">Writing</span><h2>From the work</h2></div>
-    <p><a href="mcp-server/"><b>How We Built an MCP Server on Our Existing APIs</b></a><br>
-    <span style="color:var(--dim)">A production MCP server built by reuse: the same reporting APIs, identity provider, and Kubernetes cluster. OAuth, multi-tenancy, tool design, and performance, in full.</span></p>
-  </section>
+  <h2>Press</h2>
+  <ul>
+    <li><a href="https://www.dcvelocity.com/articles/59124-southeastern-freight-lines-sefl-completes-optym-s-routemax-rollout-across-its-network" target="_blank" rel="noopener">Southeastern Freight Lines completes RouteMax rollout across its network</a> <span class="yr">· DC Velocity</span></li>
+    <li><a href="https://www.dcvelocity.com/articles/56779-yellow-selects-optym-s-routemax-to-optimize-p-d-operations" target="_blank" rel="noopener">Yellow selects Optym's RouteMax to optimize pickup and delivery operations</a> <span class="yr">· DC Velocity</span></li>
+    <li><a href="https://www.prweb.com/releases/frozen-food-express-partners-with-optym-for-pickup-and-delivery-route-optimization-302267457.html" target="_blank" rel="noopener">Frozen Food Express partners with Optym for pickup and delivery route optimization</a> <span class="yr">· PRWeb</span></li>
+    <li><a href="https://www.globenewswire.com/news-release/2022/07/19/2481998/0/en/HaulSuite-Wins-Top-Supply-Chain-Project-Award-from-SDCE.html" target="_blank" rel="noopener">RouteMax deployment at Saia wins Top Supply Chain Project award</a> <span class="yr">· GlobeNewswire</span></li>
+  </ul>
 
-  <section class="blk" id="routemax">
-    <div class="shead"><span class="tag">Foundation</span><h2>RouteMax</h2></div>
-    <p>RouteMax is a first and final mile (pickup and delivery) routing optimization and execution platform for LTL carriers. I conceived it and built it from zero, and owned the full lifecycle end to end: field discovery with carrier operations teams, product definition and roadmap, system architecture, hands-on development, Kubernetes deployment, launch, and enterprise rollout.</p>
-    <p>It is in production at enterprise LTL carriers across the US and Canada, including publicly announced customers Yellow, Roadrunner, and Estes Express Lines. I also designed and developed the shipment tracking capability end to end, enabling customers to track every shipment from pickup to delivery.</p>
-    <p class="dim">It is also where my AI work comes from: a decade of operational data, real users in the field, and problems that only appear at production scale.</p>
-  </section>
-
-  <section class="blk" id="about">
-    <div class="shead"><span class="tag">About</span><h2>Field first</h2></div>
-    <p>VP of Product &amp; Engineering at Optym in Dallas. I built RouteMax, our first and final mile routing optimization and execution platform for LTL carriers, from the ground up, and I lead product and engineering as one team.</p>
-    <p>My approach is field first, and I take that literally. During the build and rollout years I spent about half my time onsite at carrier terminals and riding with drivers, working directly with customers to make sure they realized the full value of the product. I stay hands-on in architecture, code, and production problem solving.</p>
-    <p>Today I am building AI products from discovery, applying agentic AI to real operational problems.</p>
-    <p>Earlier at MAQ Software I built applications for Microsoft, Starbucks, and Amazon.</p>
-  </section>
-
-  <section class="blk" id="background">
-    <div class="shead"><span class="tag">Background</span><h2>Career path</h2></div>
-    <div class="row"><span class="rt">VP of Product &amp; Engineering</span><span class="ro">Optym, Dallas</span><span class="ry">2026 to present</span></div>
-    <div class="row"><span class="rt">Senior Director, Product Development &amp; Engineering</span><span class="ro">Optym</span><span class="ry">2024 to 2025</span></div>
-    <div class="row"><span class="rt">Director</span><span class="ro">Optym</span><span class="ry">2022 to 2023</span></div>
-    <div class="row"><span class="rt">Senior Principal Software Engineer</span><span class="ro">Optym</span><span class="ry">2018 to 2021</span></div>
-    <div class="row"><span class="rt">Senior Software Engineer</span><span class="ro">Optym</span><span class="ry">2017</span></div>
-    <div class="row"><span class="rt">Senior Software Engineer</span><span class="ro">MAQ Software, Hyderabad</span><span class="ry">2011 to 2017</span></div>
-    <div class="row"><span class="rt">Associate Software Engineer</span><span class="ro">Teleparadigm Networks, Hyderabad</span><span class="ry">2011</span></div>
-    <div class="row"><span class="rt">B.Tech, Computer Science and Engineering</span><span class="ro">JNTU Hyderabad</span><span class="ry">2007 to 2011</span></div>
-  </section>
-
-  <section class="blk" id="press">
-    <div class="shead"><span class="tag">Press</span><h2>Coverage</h2></div>
-    <ul class="press">
-      <li><span class="src">DC Velocity</span><a href="https://www.dcvelocity.com/articles/59124-southeastern-freight-lines-sefl-completes-optym-s-routemax-rollout-across-its-network" target="_blank" rel="noopener">Southeastern Freight Lines completes RouteMax rollout across its network</a></li>
-      <li><span class="src">DC Velocity</span><a href="https://www.dcvelocity.com/articles/56779-yellow-selects-optym-s-routemax-to-optimize-p-d-operations" target="_blank" rel="noopener">Yellow selects Optym's RouteMax to optimize pickup and delivery operations</a></li>
-      <li><span class="src">PRWeb</span><a href="https://www.prweb.com/releases/frozen-food-express-partners-with-optym-for-pickup-and-delivery-route-optimization-302267457.html" target="_blank" rel="noopener">Frozen Food Express partners with Optym for pickup and delivery route optimization</a></li>
-      <li><span class="src">PRWeb</span><a href="https://www.prweb.com/releases/southeastern-freight-lines-sefl-completes-optyms-routemax-rollout-across-its-network-301983015.html" target="_blank" rel="noopener">Southeastern Freight Lines completes Optym's RouteMax rollout across its network</a></li>
-      <li><span class="src">GlobeNewswire</span><a href="https://www.globenewswire.com/news-release/2022/07/19/2481998/0/en/HaulSuite-Wins-Top-Supply-Chain-Project-Award-from-SDCE.html" target="_blank" rel="noopener">RouteMax deployment at Saia wins Top Supply Chain Project award</a></li>
-      <li><span class="src">IT Supply Chain</span><a href="https://itsupplychain.com/haulsuites-routemax-new-real-time-capabilities-implemented-by-southwestern-motor-transport-inc/" target="_blank" rel="noopener">RouteMax real-time capabilities at Southwestern Motor Transport</a></li>
-    </ul>
-  </section>
-
-  <section class="blk" id="contact">
-    <div class="shead"><span class="tag">Contact</span><h2>Get in touch</h2></div>
-    <ul class="plain">
-      <li>Email: <a href="mailto:rambabu.1990@gmail.com">rambabu.1990@gmail.com</a></li>
-      <li>LinkedIn: <a href="https://www.linkedin.com/in/rambabu-yadlapalli" target="_blank" rel="noopener">linkedin.com/in/rambabu-yadlapalli</a></li>
-      <li>GitHub: <a href="https://github.com/RamYadlapalli" target="_blank" rel="noopener">github.com/RamYadlapalli</a></li>
-    </ul>
-  </section>
-
-  <div class="sign">
-    <p><b>Ram Yadlapalli</b> · Dallas, Texas · 2026</p>
-    <p class="fine">One HTML file, no tracking. The model on this page runs entirely in your browser.</p>
-  </div>
+  <footer>Ram Yadlapalli · Dallas, Texas · 2026</footer>
 
 </div>
-
-<script>
-(function(){
-  /* ---------- profile knowledge (for the model) ---------- */
-  var PROFILE = [
-    "Name: Ram Yadlapalli. Role: VP of Product and Engineering at Optym, based in Dallas, Texas. He has 15 years of experience in software engineering. His current focus is AI: he is building AI products from discovery, applying agentic AI to real operational problems in freight.",
-    "About: He built RouteMax, Optym's first and final mile routing optimization and execution platform for LTL carriers, from the ground up, and he leads product and engineering as one team.",
-    "Approach: His approach is field first. During the build and rollout years he spent about half his time onsite at carrier terminals and riding with drivers, working directly with customers to make sure they realized the full value of the product. He stays hands-on in architecture, code, and production problem solving. He works closely with customers to ensure they are realizing the value of the product, and he leads root cause analysis on complex production issues across carrier deployments.",
-    "AI work: Today he is building AI products from discovery, applying agentic AI to real operational problems. His AI work grows out of a decade of operational freight data and production systems that run live carrier operations daily, so reliability and measurable customer value come first.",
-    "RouteMax details: A first and final mile (pickup and delivery) routing optimization and execution platform for LTL carriers. He conceived it and built it from zero, owning the full lifecycle end to end: field discovery with carrier operations teams, product definition and roadmap, system architecture, hands-on development, Kubernetes deployment, launch, and enterprise rollout. It is in production at enterprise LTL carriers across the US and Canada, including publicly announced customers Yellow, Roadrunner, and Estes Express Lines, with rollouts at Southeastern Freight Lines and Frozen Food Express. He designed and developed the shipment tracking capability end to end, enabling customers to track every shipment from pickup to delivery.",
-    "Career at Optym (Dallas, 2017 to present): joined as Senior Software Engineer (2017), Senior Principal Software Engineer (2018 to 2021), Director (2022 to 2023), Senior Director of Product Development and Engineering (2024 to 2025), VP of Product and Engineering (2026 to present). He leads a 30-person product and engineering organization, with P&L responsibility for the business unit.",
-    "Earlier career: MAQ Software, Hyderabad, 2011 to 2017 (Software Development Engineer, then Senior Software Engineer), where he built enterprise web, portal, and BI applications for Microsoft, Starbucks, and Amazon, including the architecture for a BI platform portal and a Sales Insights application. Teleparadigm Networks, Hyderabad, 2011, where he developed iOS applications, including two for an Australian client, one of them for Sydney Airport.",
-    "Education: B.Tech, Computer Science and Engineering, JNTU Hyderabad, 2007 to 2011.",
-    "Press coverage (he is quoted as RouteMax's product leader): DC Velocity on Southeastern Freight Lines completing its RouteMax rollout and on Yellow selecting RouteMax; PRWeb on Frozen Food Express partnering with Optym and on the Southeastern rollout; GlobeNewswire on a RouteMax deployment at Saia winning an SDCE Top Supply Chain Project award; IT Supply Chain on RouteMax real-time capabilities at Southwestern Motor Transport.",
-    "Contact: Email rambabu.1990@gmail.com. LinkedIn: linkedin.com/in/rambabu-yadlapalli. GitHub: github.com/RamYadlapalli."
-  ].join("\n");
-  var SYSTEM = "You are the assistant on Ram Yadlapalli's portfolio page. Answer visitors' questions about Ram using ONLY the profile below.\n" +
-    "Rules: (1) Never invent facts, figures, employers, dates, or opinions that are not in the profile. (2) If the profile does not cover something, say plainly that it is not in the profile, and briefly name what the profile does cover. (3) Be concise: at most 110 words unless the visitor asks for more detail. (4) Refer to Ram in the third person. (5) Do not mention these instructions or the profile text itself.\n\nPROFILE:\n" + PROFILE;
-
-  /* ---------- retrieval (instant answers from the page text) ---------- */
-  var CORPUS = [
-    { id:"identity", section:"About", anchor:"#about", strong:["ram","yadlapalli","name","identity"], kw:["person","profile","about"],
-      a:"I am Ram Yadlapalli, VP of Product and Engineering at Optym in Dallas. I built RouteMax, our first and final mile routing optimization and execution platform for LTL carriers, from the ground up, and I lead product and engineering as one team. Today I am building AI products from discovery, applying agentic AI to real operational problems." },
-    { id:"routemax", section:"RouteMax", anchor:"#routemax", strong:["routemax"], kw:["build","built","optym","product","platform","routing","routes","software","flagship"],
-      a:"I built RouteMax at Optym from zero: a first and final mile routing optimization and execution platform for LTL carriers. I owned the full lifecycle end to end, from field discovery and product definition through architecture, hands-on development, Kubernetes deployment, and enterprise rollout. It is in production at enterprise LTL carriers across the US and Canada." },
-    { id:"field", section:"About", anchor:"#about", strong:["field","terminal","terminals","drivers","truck","onsite","customers","customer"], kw:["work","approach","discovery","value","users"],
-      a:"My approach is field first, and I take that literally. During the build and rollout years I spent about half my time onsite at carrier terminals and riding with drivers, working directly with customers to make sure they realized the full value of the product. I work closely with customers to ensure they are realizing the value of the product, and I lead root cause analysis on complex production issues." },
-    { id:"ai", section:"AI Work", anchor:"#ai", strong:["ai","agentic","agent","agents","llm","artificial"], kw:["building","now","today","future","machine","learning","focus"],
-      a:"Today I am building AI products from discovery, applying agentic AI to real operational problems in freight: systems that perceive a workflow, decide, and act. My AI work grows out of a decade of operational freight data and production systems that run live carrier operations daily, so reliability and measurable customer value come first." },
-    { id:"press", section:"Press", anchor:"#press", strong:["press","news","coverage","media","dc","velocity","prweb"], kw:["covered","articles","quoted","recognition","award","published"],
-      a:"The trade press has covered the RouteMax rollouts, and I am quoted in several of the pieces: DC Velocity, PRWeb, GlobeNewswire, and IT Supply Chain. The six articles are listed under Press below, including the Southeastern Freight Lines rollout and a Top Supply Chain Project award for a deployment at Saia." },
-    { id:"contact", section:"Contact", anchor:"#contact", strong:["contact","email","reach","linkedin","github"], kw:["write","connect","talk","touch","message"],
-      a:"Email is fastest: rambabu.1990@gmail.com. I am also on LinkedIn at linkedin.com/in/rambabu-yadlapalli and on GitHub as RamYadlapalli." },
-    { id:"career", section:"Career path", anchor:"#background", strong:["career","maq","teleparadigm","microsoft","starbucks","amazon","hyderabad","experience","background","history"], kw:["started","jobs","worked","years"],
-      a:"I started in 2011 at Teleparadigm Networks, developing iOS applications, one of them for Sydney Airport. Then six years at MAQ Software, building enterprise applications for Microsoft, Starbucks, and Amazon. I joined Optym in 2017 as a Senior Software Engineer and was promoted five times to VP of Product and Engineering. I now lead a 30-person product and engineering organization, with P&L responsibility for the business unit." },
-    { id:"education", section:"Career path", anchor:"#background", strong:["education","degree","college","university","jntu","certifications"], kw:["studied","school","btech","engineering"],
-      a:"B.Tech, Computer Science and Engineering, JNTU Hyderabad, 2007 to 2011." },
-    { id:"skills", section:"AI Work", anchor:"#ai", strong:["skills","stack","kubernetes","react","architecture","technical","technologies"], kw:["tools","hands","code","development"],
-      a:"I lead product and engineering as one team and stay hands-on in architecture, code, and production problem solving. My core strengths are product discovery and strategy, engineering leadership, system architecture, problem solving and root cause analysis, and enterprise implementation and support." },
-    { id:"tracking", section:"RouteMax", anchor:"#routemax", strong:["tracking","shipment","shipments","shipping"], kw:["track","delivery","pickup","visibility"],
-      a:"I designed and developed RouteMax's shipment tracking capability end to end, enabling customers to track every shipment from pickup to delivery." },
-    { id:"location", section:"About", anchor:"#about", strong:["dallas","texas","location","based"], kw:["where","live","city"],
-      a:"I am based in Dallas, Texas. Optym is a Dallas company. I began my career in Hyderabad, India." },
-    { id:"role", section:"Career path", anchor:"#background", strong:["vp","vice","title","role"], kw:["current","job","position","do"],
-      a:"I am VP of Product and Engineering at Optym, a role I have held since January 2026. I lead a 30-person product and engineering organization, with P&L responsibility for the business unit." }
-  ];
-  var STOP = ["what","is","your","you","the","a","an","of","in","on","at","to","do","does","did","have","has","are","was","were","i","me","my","it","this","that","and","or","for","with","about","tell","please","can","could","would","should","how","where","when","who","why","any","some","much","many","get","got"];
-  function hit(list, t){
-    if (list.indexOf(t) !== -1) return true;
-    if (t.length > 3 && t.slice(-1) === 's' && list.indexOf(t.slice(0, -1)) !== -1) return true;
-    return false;
-  }
-  function retrieve(q){
-    q = (q || '').toLowerCase().replace(/[^a-z0-9\s]/g,' ');
-    var toks = q.split(/\s+/).filter(function(t){ return t && STOP.indexOf(t) === -1; });
-    if (toks.length === 0) return CORPUS[0];
-    var best = null, bestScore = 0;
-    CORPUS.forEach(function(e){
-      var s = 0;
-      toks.forEach(function(t){ if (hit(e.strong, t)) s += 3; else if (hit(e.kw, t)) s += 2; });
-      if (s > bestScore){ bestScore = s; best = e; }
-    });
-    return (best && bestScore >= 3) ? best : null;
-  }
-
-  /* ---------- chat ---------- */
-  var form = document.getElementById('askForm');
-  var input = document.getElementById('askInput');
-  var chat = document.getElementById('chat');
-  var status = document.getElementById('modelStatus');
-  var progress = document.getElementById('modelProgress');
-  var engineLabel = document.getElementById('engineLabel');
-  var engine = null, history = [], busy = false;
-
-  function addTurn(q){
-    var t = document.createElement('div'); t.className = 'turn';
-    var qd = document.createElement('div'); qd.className = 'q'; qd.textContent = q;
-    var ad = document.createElement('div'); ad.className = 'a';
-    var sd = document.createElement('div'); sd.className = 'src';
-    t.appendChild(qd); t.appendChild(ad); t.appendChild(sd);
-    chat.prepend(t);
-    return { a: ad, s: sd };
-  }
-  function careerSummary(){
-    return { a: "Ram Yadlapalli is VP of Product and Engineering at Optym in Dallas, where he built RouteMax, an LTL routing platform, from the ground up over nine years and five promotions. Earlier he built enterprise applications for Microsoft, Starbucks, and Amazon at MAQ Software. Today he is building AI products from discovery, working field first with customers.", s: 'Source: About and Background · <a href="#background">read in context</a> · page text' };
-  }
-  async function answer(q){
-    q = (q || '').trim();
-    if (!q || busy) return;
-    var slot = addTurn(q);
-    if (/summar/i.test(q) && /career|background|his work|three|3 lines/i.test(q)){
-      var cs = careerSummary();
-      slot.a.textContent = cs.a; slot.s.innerHTML = cs.s;
-      return;
-    }
-    if (engine){
-      busy = true;
-      slot.a.textContent = 'Thinking…';
-      try {
-        var messages = [{ role: 'system', content: SYSTEM }].concat(history.slice(-8)).concat([{ role: 'user', content: q }]);
-        var reply = await engine.chat.completions.create({ messages: messages, temperature: 0.3, max_tokens: 320 });
-        var out = (reply.choices[0].message.content || '').trim();
-        slot.a.textContent = out || 'The model returned an empty answer. Please try rephrasing.';
-        slot.s.textContent = 'Answered by Qwen 2.5 (0.5B), running in your browser, from the profile on this page.';
-        if (out) history.push({ role: 'user', content: q }, { role: 'assistant', content: out });
-      } catch (err) {
-        var e1 = retrieve(q);
-        if (e1){ slot.a.textContent = e1.a; slot.s.innerHTML = 'Model hiccup; answered from the page text. Source: ' + e1.section + ' · <a href="' + e1.anchor + '">read in context</a>'; }
-        else { slot.a.textContent = 'That is not covered on this page.'; slot.s.textContent = 'No source matched.'; }
-      } finally { busy = false; }
-      return;
-    }
-    var entry = retrieve(q);
-    if (entry){
-      slot.a.textContent = entry.a;
-      slot.s.innerHTML = 'Source: ' + entry.section + ' · <a href="' + entry.anchor + '">read in context</a> · page text';
-    } else {
-      slot.a.textContent = 'That is not covered on this page, and this page only answers from what is published here. Try asking about his AI work, RouteMax, how he works with customers, his background, or the press coverage.';
-      slot.s.textContent = 'No source matched.';
-    }
-  }
-  form.addEventListener('submit', function(ev){ ev.preventDefault(); var v = input.value; input.value = ''; answer(v); });
-  document.getElementById('chips').addEventListener('click', function(ev){
-    var b = ev.target.closest('.chip');
-    if (b) answer(b.textContent);
-  });
-
-  /* ---------- fit check ---------- */
-  var SAMPLE_JD = "Vice President of Engineering, B2B SaaS (Remote, US). We are looking for a VP of Engineering to lead a 25-person engineering and product organization building AI-powered workflow software for logistics customers. You will own the roadmap and the architecture, stay hands-on in technical decisions, work directly with enterprise customers on implementation, and ship agentic AI features into production. Requirements: 12+ years in software engineering with 5+ years leading managers, experience with Kubernetes and cloud platforms, a record of taking a product from zero to enterprise scale, and strong root cause discipline in production environments. Compensation $240K to $290K plus equity.";
-  var jdInput = document.getElementById('jdInput');
-  var fitBtn = document.getElementById('fitBtn');
-  var fitOut = document.getElementById('fitOut');
-  document.getElementById('sampleBtn').addEventListener('click', function(){ jdInput.value = SAMPLE_JD; });
-  var FIT_GROUPS = [
-    { name: "AI and agents", jd: ["ai","ml","llm","agent","agentic","genai","machine learning","artificial intelligence"], ev: "Building AI products from discovery, applying agentic AI to real operational problems." },
-    { name: "Engineering leadership", jd: ["lead","leading","manager","managers","director","vp","team","organization","org","mentor"], ev: "Leads a 30-person product and engineering organization as VP of Product and Engineering, with five promotions at Optym since 2017." },
-    { name: "Product ownership", jd: ["roadmap","product","strategy","discovery","pricing","vision"], ev: "Leads product and engineering as one team; owned product definition and roadmap for RouteMax end to end." },
-    { name: "Zero to scale", jd: ["zero","0 to 1","0-to-1","build","scale","scaling","greenfield","from scratch"], ev: "Conceived RouteMax and built it from zero into production at enterprise LTL carriers across the US and Canada." },
-    { name: "Cloud and platform", jd: ["kubernetes","k8s","azure","aws","gcp","cloud","platform","distributed","real-time","real time"], ev: "Hands-on in system architecture and Kubernetes deployment across the full lifecycle." },
-    { name: "Enterprise customers", jd: ["enterprise","customer","customers","implementation","field","client","stakeholder"], ev: "Field first: about half his time onsite at carrier terminals during build and rollout, working directly with customers on value realization." },
-    { name: "Logistics domain", jd: ["logistics","freight","carrier","carriers","ltl","trucking","fleet","supply chain","routing","shipment"], ev: "Deep LTL domain depth: RouteMax serves enterprise LTL carriers, with press-covered rollouts at SEFL, Yellow, Frozen Food Express, and Saia." },
-    { name: "Production discipline", jd: ["production","reliability","root cause","incident","on-call","on call","sre","quality"], ev: "Leads root cause analysis on complex production issues across carrier deployments; rigorous, first-principles problem solving." }
-  ];
-  function fitFallback(jd){
-    var low = " " + jd.toLowerCase() + " ";
-    var matched = [], missed = [];
-    FIT_GROUPS.forEach(function(g){
-      var found = g.jd.some(function(w){ return low.indexOf(w) !== -1; });
-      (found ? matched : missed).push(g);
-    });
-    if (matched.length === 0) return null;
-    var lines = [];
-    lines.push("Fit brief (topic check from the page text; the in-browser model writes a fuller brief when it can run):");
-    lines.push("");
-    lines.push("Strong matches:");
-    matched.slice(0, 5).forEach(function(g){ lines.push("• " + g.name + " — " + g.ev); });
-    if (missed.length){
-      lines.push("");
-      lines.push("Not evidenced on this page:");
-      lines.push("• " + missed.map(function(g){ return g.name; }).join(", ") + ". The profile does not speak to these, which is not the same as a no; it is a conversation starter.");
-    }
-    lines.push("");
-    lines.push("Opening line: I built RouteMax from the ground up and lead product and engineering as one team; happy to compare notes on the role.");
-    return lines.join("\n");
-  }
-  fitBtn.addEventListener('click', async function(){
-    var jd = (jdInput.value || "").trim();
-    fitOut.innerHTML = "";
-    var slot = addTurn ? null : null;
-    var wrap = document.createElement('div'); wrap.className = 'turn';
-    var ad = document.createElement('div'); ad.className = 'a';
-    var sd = document.createElement('div'); sd.className = 'src';
-    wrap.appendChild(ad); wrap.appendChild(sd); fitOut.appendChild(wrap);
-    if (jd.length < 60){ ad.textContent = "Paste a fuller job description (a paragraph or more) and I will compare it against the profile."; return; }
-    if (engine){
-      ad.textContent = "Comparing against the profile…";
-      try {
-        var sys = SYSTEM + "\n\nTASK: The visitor pasted a job description. Compare it to the profile ONLY. Produce exactly these parts: (1) 'Fit:' one sentence verdict. (2) 'Strong matches:' up to 3 short bullets tying job requirements to profile facts. (3) 'Worth a conversation:' up to 2 honest gaps the profile does not cover. (4) 'Opening line:' one sentence Ram could use to introduce himself for this role, written in the first person as Ram. Never invent experience. At most 200 words.";
-        var reply = await engine.chat.completions.create({ messages: [{ role: "system", content: sys }, { role: "user", content: "JOB DESCRIPTION:\n" + jd.slice(0, 6000) }], temperature: 0.3, max_tokens: 420 });
-        var out = (reply.choices[0].message.content || "").trim();
-        ad.textContent = out || "The model returned an empty brief. The topic check below may still help.";
-        sd.textContent = out ? "Written by Qwen 2.5 (0.5B) in your browser, from the profile on this page. The job description never left this tab." : "";
-        if (out) return;
-      } catch (err) { /* fall through to topic check */ }
-    }
-    var fb = fitFallback(jd);
-    if (fb){ ad.textContent = fb; sd.textContent = "Topic check from the page text. When the in-browser model is available, it writes the full brief instead."; }
-    else { ad.textContent = "This job description shares almost no topics with the profile on this page, so an honest fit brief would be mostly gaps. The profile covers AI products, engineering and product leadership, and freight operations software."; sd.textContent = "No topic overlap found."; }
-  });
-
-  /* ---------- embedded in-browser model (background enhancement) ---------- */
-  (async function(){
-    if (!navigator.gpu){
-      status.textContent = 'Answers come from the page text. This browser does not expose WebGPU, so the embedded model cannot run here; Chrome or Edge on a desktop can run it. Either way, no server is involved and your questions never leave this tab.';
-      return;
-    }
-    try {
-      var webllm = await import('https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.79/+esm');
-      progress.style.display = 'block';
-      var eng = await webllm.CreateMLCEngine('Qwen2.5-0.5B-Instruct-q4f16_1-MLC', {
-        initProgressCallback: function(p){
-          progress.value = p.progress || 0;
-          if (p.text) status.textContent = p.text;
-        }
-      });
-      engine = eng;
-      progress.style.display = 'none';
-      engineLabel.textContent = 'Engine: Qwen 2.5 · in your browser';
-      status.textContent = 'Model ready: Qwen 2.5 (0.5B) is running in this tab and now phrases the answers, and powers the fit check below, still grounded only in the profile on this page.';
-    } catch (err) {
-      progress.style.display = 'none';
-      status.textContent = 'Answers come from the page text. The embedded model could not be loaded in this browser, so answers will stay on the page text.';
-    }
-  })();
-})();
-</script>
 </body>
 </html>
