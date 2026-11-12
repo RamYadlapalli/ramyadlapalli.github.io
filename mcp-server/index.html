@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How We Built an MCP Server on Our Existing APIs | Ram Yadlapalli</title>
-<meta name="description" content="How we built a production MCP server on top of existing reporting APIs, identity, and Kubernetes: OAuth with PKCE, multi-tenancy, tool design, performance, and what comes next. By Ram Yadlapalli, VP of Product Development and Engineering.">
+<meta name="description" content="How we built a production MCP server on top of existing reporting APIs, identity, and Kubernetes: OAuth with PKCE, multi-tenancy, tool design, and performance. By Ram Yadlapalli, VP of Product Development and Engineering.">
 <meta name="author" content="Ram Yadlapalli">
 <link rel="canonical" href="https://ramyadlapalli.github.io/mcp-server/">
 <meta property="og:type" content="article">
@@ -15,7 +15,6 @@
 <meta name="color-scheme" content="light">
 <style>
   :root{color-scheme:light;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad;--code:#f6f6f6;--diag:#fafafa}
-  }
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
   .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
@@ -61,9 +60,9 @@
 
   <h1>How We Built an MCP Server on Our Existing APIs</h1>
   <p class="byline">Ram Yadlapalli · VP of Product Development and Engineering · Dallas · November 2026 · 14 min read</p>
-  <p class="lede">We built an MCP server for our product in a few weeks. Most of it was reuse: the same reporting APIs, the same identity provider, the same Kubernetes cluster and pipeline. This is a write-up of what we did, what worked, and what we plan next.</p>
+  <p class="lede">We built an MCP server for our product in a few weeks. Most of it was reuse: the same reporting APIs, the same identity provider, the same Kubernetes cluster and pipeline. This is a write up of what we did and what worked.</p>
 
-  <div class="toc"><p>Contents</p><ul><li><a href="#why">Why</a></li><li><a href="#what-mcp-is">What MCP is</a></li><li><a href="#where-the-tools-get-data">Where the tools get data</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#authentication">Authentication</a></li><li><a href="#multi-tenancy">Multi tenancy</a></li><li><a href="#tool-design">Tool design</a></li><li><a href="#performance">Performance</a></li><li><a href="#hosting">Hosting</a></li><li><a href="#connecting-claude">Connecting Claude</a></li><li><a href="#what-we-learned">What we learned</a></li><li><a href="#next-phase-microsoft-fabric-for-analytics">Next phase: Microsoft Fabric for analytics</a></li><li><a href="#other-next-steps">Other next steps</a></li></ul></div>
+  <div class="toc"><p>Contents</p><ul><li><a href="#why">Why</a></li><li><a href="#what-mcp-is">What MCP is</a></li><li><a href="#where-the-tools-get-data">Where the tools get data</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#authentication">Authentication</a></li><li><a href="#multi-tenancy">Multi tenancy</a></li><li><a href="#tool-design">Tool design</a></li><li><a href="#performance">Performance</a></li><li><a href="#hosting">Hosting</a></li><li><a href="#connecting-claude">Connecting Claude</a></li><li><a href="#what-we-learned">What we learned</a></li></ul></div>
 
   <article>
 <h2 id="why">Why</h2>
@@ -124,8 +123,7 @@
     N --&gt; N1[Duplicate tenancy,&lt;br/&gt;auth and queries]
     W --&gt; W1[New pipelines,&lt;br/&gt;new permission model]
     E --&gt; E1[Tenancy, permissions and&lt;br/&gt;queries already exist]
-    E1 --&gt; OK[Chosen for version 1]
-    W1 -. &quot;later, for analytics&quot; .-&gt; LT[See: Next phase]</pre></div>
+    E1 --&gt; OK[Chosen for version 1]</pre></div>
 <p>So the MCP server only translates. A tool call comes in, it calls an existing endpoint and returns a compact JSON result. It has no database credentials. If a user can't see something in the web app, the assistant can't see it either.</p>
 <h2 id="architecture">Architecture</h2>
 <div class="diagram"><pre class="mermaid">flowchart LR
@@ -281,67 +279,11 @@
 <li>If a question is slow in SQL, it is slower through an assistant. Precompute it.</li>
 <li>Treat a live demo like a release: sign in beforehand, two replicas, and questions that return in seconds.</li>
 </ol>
-<h2 id="next-phase-microsoft-fabric-for-analytics">Next phase: Microsoft Fabric for analytics</h2>
-<p>Version 1 is good for questions about the current operation ("how is today going?"). It is not a good fit for deeper analysis:</p>
-<ul>
-<li>The reporting APIs are built for screens, so questions across months or many locations need many calls.</li>
-<li>Every slow question needs its own summary table and stored procedure in the operational database.</li>
-<li>Analytics queries run on the same databases as the live application.</li>
-<li>Combining our data with other sources (finance, IoT, customer service) is hard.</li>
-</ul>
-<p>The plan is to move analytics to a lakehouse on Microsoft Fabric. The MCP server stays the entry point for assistants.</p>
-<h3 id="target-architecture">Target architecture</h3>
-<div class="diagram"><pre class="mermaid">flowchart LR
-    subgraph Ops[&quot;Operational databases (per tenant)&quot;]
-        P[(Database A)]
-        D[(Database B)]
-        R[(Reporting)]
-        T[(Database C)]
-    end
-    subgraph Fabric[&quot;Microsoft Fabric (OneLake)&quot;]
-        BR[Bronze&lt;br/&gt;raw mirrored tables]
-        SI[Silver&lt;br/&gt;cleaned, conformed,&lt;br/&gt;JSON flattened]
-        GO[Gold&lt;br/&gt;business metrics&lt;br/&gt;and KPIs]
-        SM[Semantic model&lt;br/&gt;shared definitions&lt;br/&gt;+ row level security]
-        BR --&gt; SI --&gt; GO --&gt; SM
-    end
-    P &amp; D &amp; R &amp; T -- &quot;mirroring / CDC&quot; --&gt; BR
-    X[Other sources&lt;br/&gt;IoT, finance,&lt;br/&gt;service tickets] --&gt; BR
-    M[MCP server] -- &quot;today&#x27;s operation&quot; --&gt; API[Existing APIs]
-    M -- &quot;history, trends, cross location&quot; --&gt; SM
-    A[AI assistants] --&gt; M
-    BI[Dashboards and BI] --&gt; SM</pre></div>
-<h3 id="how-it-works">How it works</h3>
-<ul>
-<li><strong>Ingestion:</strong> mirror the operational databases into OneLake using database mirroring or CDC. No export jobs to maintain, and data lands in minutes.</li>
-<li><strong>Bronze, silver, gold:</strong> bronze has the raw copies. Silver flattens the JSON payloads, standardizes codes and joins related records. Gold has business tables, the same kind of summaries we built by hand for the slow questions, for all metrics and full history.</li>
-<li><strong>Semantic model:</strong> metric definitions (what is "on time", how a delay is measured) are defined once and used by both dashboards and AI tools, so both give the same number.</li>
-<li><strong>Security:</strong> tenant isolation with separate workspaces or row level security. User filters such as location access come from the same identity claims the APIs use today.</li>
-<li><strong>Routing in the MCP server:</strong> tool names and inputs stay the same. Questions about today go to the APIs. Questions about history and trends go to the semantic model. The assistant doesn't need to know which one answered.</li>
-<li><strong>Fewer stored procedures:</strong> a new question becomes a gold table or a measure, and analytics load moves off the production databases.</li>
-<li><strong>More tools later:</strong> with clean, documented data we can add broader tools, for example querying any metric in the semantic model, and combine sources.</li>
-</ul>
-<h3 id="phases">Phases</h3>
-<div class="diagram"><pre class="mermaid">timeline
-    title Roadmap
-    Phase 1 (done) : MCP server over existing APIs : Read only tools : OAuth with existing identity provider : Summary tables for slow questions
-    Phase 2 : Mirror operational databases into the lakehouse : Bronze and silver : First gold tables for core KPIs
-    Phase 3 : Semantic model with shared metric definitions : Row level security per tenant and user : MCP tools for history and trends
-    Phase 4 : More sources such as IoT and finance : Broader query tools : Write actions with human approval</pre></div>
-<p>For customers nothing changes. Same assistant, same login, same permissions.</p>
-<h2 id="other-next-steps">Other next steps</h2>
-<ul>
-<li>Finer scopes, so a customer can give the assistant less access than the full user has.</li>
-<li>Audience restriction on tokens issued for the MCP client.</li>
-<li>More tools, based on what customers actually ask.</li>
-<li>Write actions that only draft a change for a person to approve.</li>
-<li>Usage telemetry on which tools and questions get used.</li>
-</ul>
 <p>If you already have secure APIs and an identity provider, you don't need a new platform to get started. A thin MCP server on top of them is enough for version 1. See what people ask, then decide what to build behind it.</p>
   </article>
 
   <footer class="site">
-    <p><b>Ram Yadlapalli</b> is VP of Product Development and Engineering in Dallas. He led the rebuild of a First Mile and Last Mile Optimization and execution product for LTL carriers, and built an MCP server, a shipment tracking product, and an appointment scheduling agent in 2026. <a href="../">More about my work</a> · <a href="mailto:rambabu.1990@gmail.com">Get in touch</a></p>
+    <p><b>Ram Yadlapalli</b> is VP of Product Development and Engineering in Dallas. He led the rebuild of a pickup and delivery (first and last mile) optimization and execution product for LTL carriers, and built an MCP server, a shipment tracking product, and an appointment scheduling agent in 2026. <a href="../">More about my work</a> · <a href="mailto:rambabu.1990@gmail.com">Get in touch</a></p>
   </footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
