@@ -18,10 +18,10 @@
 {"@context":"https://schema.org","@type":"Person","name":"Ram Yadlapalli","jobTitle":"Vice President of Product Development and Engineering","worksFor":{"@type":"Organization","name":"Optym"},"address":{"@type":"PostalAddress","addressLocality":"Dallas","addressRegion":"TX","addressCountry":"US"},"url":"https://ramyadlapalli.github.io/","image":"https://ramyadlapalli.github.io/ram-yadlapalli.jpg","email":"mailto:rambabu.1990@gmail.com","sameAs":["https://www.linkedin.com/in/rambabu-yadlapalli","https://github.com/RamYadlapalli"],"knowsAbout":["Engineering leadership","Logistics software","LTL pickup and delivery","Customer deployments and integrations","React","React Native","TypeScript","Node.js","Azure","Kubernetes","MCP servers","Agentic AI"]}
 </script>
 <style>
-  :root{color-scheme:light;--bg:#fff;--ink:#111;--dim:#555;--faint:#888;--line:#e5e5e5;--acc:#0645ad}
+  :root{color-scheme:light;--bg:#fff;--ink:#111;--dim:#555;--faint:#595959;--line:#e5e5e5;--acc:#0645ad}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
-  .wrap{max-width:720px;margin:0 auto;padding:36px 20px 72px}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
   h1{font-size:32px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
   .role{color:var(--dim);font-size:17px;margin-bottom:22px}
   p{margin-bottom:14px}
@@ -34,7 +34,7 @@
   a{color:var(--acc);text-decoration:none}
   a:hover{text-decoration:underline}
   .dim{color:var(--dim)}
-  .yr{color:var(--faint);font-size:15px}
+  .yr{color:var(--faint);font-size:15px;white-space:nowrap}
   footer{border-top:1px solid var(--line);margin-top:44px;padding-top:18px;color:var(--faint);font-size:14.5px}
   .photo{display:block;width:120px;height:120px;object-fit:cover;border-radius:50%;margin-bottom:18px}
   .glance li{padding-left:16px;position:relative}
@@ -46,10 +46,26 @@
   .tl .role{color:var(--ink);font-size:16.5px;margin:10px 0 0}
   .tl .role p{color:var(--dim);margin:2px 0 0}
   .role-t{font-weight:700}
+  @media(max-width:600px){
+    .tl .role-t{display:block}
+    .tl .role .yr{display:block}
+  }
+  .skills{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+  .skills li{margin:0;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:15px;line-height:1.4}
+  header.site{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:32px;flex-wrap:wrap}
+  header.site .name{font-weight:700;font-size:17px;color:var(--ink);text-decoration:none}
+  header.site nav{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:14.5px}
+  header.site nav a{color:var(--dim);text-decoration:none}
+  header.site nav a:hover{color:var(--ink)}
 </style>
 </head>
 <body>
 <div class="wrap">
+
+  <header class="site">
+    <a class="name" href="./">Ram Yadlapalli</a>
+    <nav><a href="./">Home</a><a href="writing/">Writing</a><a href="ask/">Ask</a><a href="mcp-server/">MCP article</a></nav>
+  </header>
 
   <img class="photo" src="ram-yadlapalli.jpg" alt="Ram Yadlapalli" width="120" height="120">
   <h1>Ram Yadlapalli</h1>
@@ -117,7 +133,28 @@
   </div>
 
   <h2>Skills</h2>
-  <p class="dim">TypeScript, JavaScript, React, React Native, Node.js, Python, .NET, Azure (AKS, Azure SQL, Service Bus), Kubernetes, Helm, Terraform, Docker, Redis, Keycloak, Datadog, CockroachDB, Azure DevOps CI/CD, MCP servers, voice agents, and browser use agents.</p>
+  <ul class="skills">
+    <li>TypeScript</li>
+    <li>JavaScript</li>
+    <li>React</li>
+    <li>React Native</li>
+    <li>Node.js</li>
+    <li>Python</li>
+    <li>.NET</li>
+    <li>Azure (AKS, Azure SQL, Service Bus)</li>
+    <li>Kubernetes</li>
+    <li>Helm</li>
+    <li>Terraform</li>
+    <li>Docker</li>
+    <li>Redis</li>
+    <li>Keycloak</li>
+    <li>Datadog</li>
+    <li>CockroachDB</li>
+    <li>Azure DevOps CI/CD</li>
+    <li>MCP servers</li>
+    <li>voice agents</li>
+    <li>browser use agents</li>
+  </ul>
 
   <h2>Education and certifications</h2>
   <ul>
