@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moving a live logistics platform from an on premises monolith to Azure | Ram Yadlapalli</title>
+<meta name="description" content="How I led the 2018 rebuild of a first and final mile platform for LTL carriers, from an on premises ASP.NET monolith to event driven services on Azure and Kubernetes, with carriers live the whole time.">
+<meta name="author" content="Ram Yadlapalli">
+<link rel="canonical" href="https://ramyadlapalli.github.io/rebuild/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Moving a live logistics platform from an on premises monolith to Azure">
+<meta property="og:description" content="How I led the 2018 rebuild of a first and final mile platform for LTL carriers, from an on premises ASP.NET monolith to event driven services on Azure and Kubernetes, with carriers live the whole time.">
+<meta property="og:url" content="https://ramyadlapalli.github.io/rebuild/">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light">
+<style>
+  :root{color-scheme:light;--bg:#fff;--ink:#111;--dim:#555;--faint:#595959;--line:#e5e5e5;--acc:#0645ad;--diag:#fafafa}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+  header.site{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:36px;flex-wrap:wrap}
+  header.site .name{font-weight:700;font-size:17px;color:var(--ink);text-decoration:none}
+  header.site nav{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:14.5px}
+  header.site nav a{color:var(--dim);text-decoration:none}
+  header.site nav a:hover{color:var(--ink)}
+  h1{font-size:34px;line-height:1.2;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .byline{color:var(--dim);font-size:15px;margin-bottom:8px}
+  .lede{font-size:18px;color:var(--dim);margin-bottom:28px}
+  .facts{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:0 0 32px;background:var(--diag);font-size:15.5px}
+  .facts p{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:6px}
+  .facts ul{list-style:none}
+  .facts li{margin:3px 0}
+  article h2{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:36px 0 12px}
+  article p{margin-bottom:14px}
+  article ul,article ol{margin:0 0 14px 22px}
+  article li{margin-bottom:6px}
+  article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:15.5px}
+  article th,article td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  article th{background:var(--diag)}
+  .diagram{background:var(--diag);border:1px solid var(--line);border-radius:8px;padding:12px;margin:0 0 8px}
+  .diagram svg{display:block;width:100%;height:auto}
+  .cap{color:var(--faint);font-size:14.5px;margin-bottom:20px}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .more{list-style:none;margin:0 !important}
+  footer.site{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;color:var(--dim);font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="name" href="../">Ram Yadlapalli</a>
+    <nav><a href="../">Home</a><a href="../writing/">Writing</a><a href="../rebuild/">Rebuild</a><a href="../driver-app/">Driver app</a><a href="../integrations/">Integrations</a><a href="../ask/">Ask</a></nav>
+  </header>
+
+  <h1>Moving a live logistics platform from an on premises monolith to Azure</h1>
+  <p class="byline">Ram Yadlapalli · Case study · Engineering</p>
+  <p class="lede">In 2018 I led the rebuild of our first and final mile platform for LTL carriers. It moved from an on premises ASP.NET monolith to event driven services on Azure and Kubernetes, and the carriers on it kept running the whole time.</p>
+
+  <div class="facts"><p>At a glance</p><ul><li>My role: key architect and lead developer across the web app, the backend, and the driver app</li><li>Stack: React and TypeScript, Node.js, C# and .NET, React Native, Azure, AKS, Azure SQL</li><li>Today: 11 LTL carriers in the US and Canada, about 20,000 drivers, roughly 1M transactions an hour, 99.7% uptime</li></ul></div>
+
+  <article>
+<h2>The problem</h2>
+<p>I was one of the first two engineers, and in 2017 we built the MVP as a single ASP.NET application running on premises. That was the right call for an MVP. Once real carriers were on it, though, we could see how it was actually used. Different parts of the system had very different load and change rates, and they were all inside one deployable unit on premises.</p>
+<h2>The constraints</h2>
+<ul>
+<li>Carriers were live. Drivers were running routes every day, so there was no window to stop and switch over.</li>
+<li>The platform is multi tenant, so every change had to keep each carrier's data separate.</li>
+</ul>
+<h2>The design decisions</h2>
+<p>We did not split the system on day one by drawing boxes on a whiteboard. We split it where real usage told us to. As we got more clarity and first hand experience, each piece that needed to scale or change on its own became its own service.</p>
+<div class="diagram"><svg viewBox="0 0 660 310" role="img" aria-label="Platform before and after the 2018 rebuild" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif"><title>Platform before and after the 2018 rebuild</title><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="110" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#595959">2017: ON PREMISES</text><rect x="20" y="40" width="180" height="190" rx="8" fill="#f3f3f3" stroke="#888" stroke-width="1.5"/><text x="110.0" y="133.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">ASP.NET monolith</text><text x="110.0" y="152.0" text-anchor="middle" font-size="12.5" fill="#555">web, API, jobs, data</text><line x1="215" y1="135" x2="265" y2="135" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><text x="470" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#595959">2018 ON: AZURE, KUBERNETES (AKS)</text><rect x="280" y="40" width="180" height="50" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="370.0" y="63.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">React web app</text><text x="370.0" y="82.0" text-anchor="middle" font-size="12.5" fill="#555">planners, dispatchers</text><rect x="480" y="40" width="160" height="50" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="560.0" y="63.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Driver app</text><text x="560.0" y="82.0" text-anchor="middle" font-size="12.5" fill="#555">React Native</text><rect x="280" y="112" width="360" height="50" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="460.0" y="135.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Node.js and TypeScript services</text><text x="460.0" y="154.0" text-anchor="middle" font-size="12.5" fill="#555">split along real usage, multi tenant</text><rect x="280" y="184" width="130" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="345.0" y="205.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Messaging</text><text x="345.0" y="224.0" text-anchor="middle" font-size="12.5" fill="#555">AMQP, Service Bus</text><rect x="420" y="184" width="100" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="470.0" y="205.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Event Hubs</text><text x="470.0" y="224.0" text-anchor="middle" font-size="12.5" fill="#555">driver, location</text><rect x="530" y="184" width="110" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="585.0" y="205.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">SignalR</text><text x="585.0" y="224.0" text-anchor="middle" font-size="12.5" fill="#555">and others</text><rect x="280" y="252" width="180" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="370.0" y="273.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Azure SQL</text><text x="370.0" y="292.0" text-anchor="middle" font-size="12.5" fill="#555">per tenant data</text><rect x="480" y="252" width="160" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="560.0" y="273.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Blob and File</text><text x="560.0" y="292.0" text-anchor="middle" font-size="12.5" fill="#555">Storage</text><rect x="20" y="252" width="180" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="110.0" y="273.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Optimization engine</text><text x="110.0" y="292.0" text-anchor="middle" font-size="12.5" fill="#555">.NET, OR team</text><line x1="370" y1="90" x2="370" y2="110" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="560" y1="90" x2="560" y2="110" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="345" y1="162" x2="345" y2="182" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="470" y1="162" x2="470" y2="182" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="585" y1="162" x2="585" y2="182" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="370" y1="230" x2="370" y2="250" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="280" y1="150" x2="200" y2="260" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/></svg></div>
+<p class="cap">Before and after the rebuild. The optimization engine is owned by the operations research team; I designed the services and integrations around it.</p>
+<ul>
+<li><b>Move to Azure.</b> We left the on premises servers and moved to Azure, with services running on Kubernetes (AKS) and data in Azure SQL.</li>
+<li><b>Node.js and TypeScript services.</b> New services were written in Node.js and TypeScript, with C# and .NET where it fit better. I was the lead developer on the backend and on the React web app for planners and dispatchers.</li>
+<li><b>Messaging between services.</b> Where work can be queued, services hand it to each other through AMQP messaging and Azure Service Bus, so they can scale on their own.</li>
+<li><b>Event Hubs for driver and location traffic.</b> Driver events and GPS pings are the highest volume streams, so they come in through Event Hubs.</li>
+<li><b>Other Azure components.</b> SignalR and the other pieces came in the same way, when real usage showed we needed them.</li>
+<li><b>Blob and File Storage.</b> Photos, documents, and integration files live in storage built for them, not in the database.</li>
+</ul>
+<h2>The result</h2>
+<p>Carriers stayed live through the whole rebuild. The same architecture now runs 11 LTL carriers in the US and Canada, about 20,000 drivers and 1,000 planners and dispatchers, at roughly a million transactions an hour and 99.7% uptime. It also let us move to monthly releases in 2022.</p>
+<p>I still revisit it. Cloud cost is something I look at all the time, and I keep asking the same question about each component: if I built this again today, what would I change? Then we refactor when the answer is worth it.</p>
+
+  <h2>More case studies</h2>
+  <ul class="more"><li><a href="../driver-app/">Designing an offline first driver app for drivers who lose signal</a></li><li><a href="../integrations/">Integrating with AS400 and custom TMS systems without asking carriers to build much</a></li></ul>
+  </article>
+
+  <footer class="site">
+    <p><b>Ram Yadlapalli</b> leads product and engineering in Dallas and was the key architect and lead developer of a first and final mile optimization and execution platform for LTL carriers. <a href="../">More about my work</a> · <a href="mailto:rambabu.1990@gmail.com">Get in touch</a></p>
+  </footer>
+</div>
+</body>
+</html>
