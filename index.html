@@ -64,14 +64,14 @@
 
   <header class="site">
     <a class="name" href="./">Ram Yadlapalli</a>
-    <nav><a href="./">Home</a><a href="writing/">Writing</a><a href="ask/">Ask</a><a href="mcp-server/">MCP article</a></nav>
+    <nav><a href="./">Home</a><a href="writing/">Writing</a><a href="rebuild/">Rebuild</a><a href="driver-app/">Driver app</a><a href="integrations/">Integrations</a><a href="ask/">Ask</a></nav>
   </header>
 
   <img class="photo" src="ram-yadlapalli.jpg" alt="Ram Yadlapalli" width="120" height="120">
   <h1>Ram Yadlapalli</h1>
   <p class="role">Vice President of Product Development and Engineering at Optym &nbsp;·&nbsp; Dallas, Texas</p>
 
-  <p>I run product and engineering at Optym. I built our first and final mile optimization and execution platform for LTL carriers, starting from a 2017 MVP with 2 engineers. Today it runs at 11 carriers in the US and Canada, and the team is 30 people. I have managed teams since 2015, and I still write code.</p>
+  <p>I run product and engineering at Optym. I built our first and final mile optimization and execution platform for LTL carriers, starting from a 2017 MVP with 2 engineers, and I was its key architect and lead developer across the React web app, the Node.js and C# .NET backend, and the React Native driver app. Today it runs at 11 carriers in the US and Canada, and the team is 30 people. I have managed teams since 2015, and I still write code.</p>
 
   <p class="links"><a href="mailto:rambabu.1990@gmail.com">Email</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/rambabu-yadlapalli" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/RamYadlapalli" target="_blank" rel="noopener">GitHub</a> &nbsp;·&nbsp; <a href="writing/">Writing</a> &nbsp;·&nbsp; <a href="ask/">Ask about my work (AI demo)</a></p>
 
@@ -92,6 +92,16 @@
     <li><b>Working with customers</b>About 30% of my time is with users and in the terminals. Before we built the driver app, I spent 3 weeks on the road with drivers to understand a day in their life. I like to prototype early, share it with the customer, and then take the problem from discovery to production.</li>
     <li><b>Deployments and integrations</b>I help with sales engineering and RFP responses, and once a carrier signs I lead implementation and ROI realization with their executive sponsors. A deployment takes 1 to 6 months. The hard part is usually the legacy AS400 or custom TMS, so I lead the technical discovery and design the integration to keep the carrier&rsquo;s side of the work small.</li>
     <li><b>Logistics operations software</b>Planning, dispatch, and driver workflows for LTL pickup and delivery, dock appointment scheduling, and shipment tracking with PO and BOL lookups.</li>
+  </ul>
+
+  <h2>Engineering case studies</h2>
+  <ul>
+    <li><a href="rebuild/"><b>Moving a live logistics platform from an on premises monolith to Azure</b></a><br>
+    <span class="dim">The 2018 rebuild I led: splitting an ASP.NET monolith along real usage into Node.js and TypeScript services on Kubernetes, with AMQP, Event Hubs, Service Bus, and SignalR, while carriers stayed live.</span></li>
+    <li><a href="driver-app/"><b>Designing an offline first driver app for drivers who lose signal</b></a><br>
+    <span class="dim">Native modules for maps and navigation, local first actions, a persisted outbox, per driver ordering with Service Bus sessions, and idempotent processing for about 500K driver events and about 1.5M GPS pings a weekday at a single carrier.</span></li>
+    <li><a href="integrations/"><b>Integrating with AS400 and custom TMS systems without asking carriers to build much</b></a><br>
+    <span class="dim">Streaming, APIs, FTP triggered flows, and event triggered Logic Apps that write directly into the carrier&rsquo;s system.</span></li>
   </ul>
 
   <h2><a href="writing/" style="color:var(--ink)">Writing</a></h2>
@@ -154,8 +164,6 @@
     <li>.NET</li>
     <li>Azure (AKS, Azure SQL, Service Bus)</li>
     <li>Kubernetes</li>
-    <li>Helm</li>
-    <li>Terraform</li>
     <li>Docker</li>
     <li>Redis</li>
     <li>Keycloak</li>
