@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designing an offline first driver app for drivers who lose signal | Ram Yadlapalli</title>
+<meta name="description" content="How I designed an offline first React Native driver app for LTL pickup and delivery: local first actions, a persisted outbox, ordered delivery per driver, and idempotent processing.">
+<meta name="author" content="Ram Yadlapalli">
+<link rel="canonical" href="https://ramyadlapalli.github.io/driver-app/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Designing an offline first driver app for drivers who lose signal">
+<meta property="og:description" content="How I designed an offline first React Native driver app for LTL pickup and delivery: local first actions, a persisted outbox, ordered delivery per driver, and idempotent processing.">
+<meta property="og:url" content="https://ramyadlapalli.github.io/driver-app/">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light">
+<style>
+  :root{color-scheme:light;--bg:#fff;--ink:#111;--dim:#555;--faint:#595959;--line:#e5e5e5;--acc:#0645ad;--diag:#fafafa}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.65}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+  header.site{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:36px;flex-wrap:wrap}
+  header.site .name{font-weight:700;font-size:17px;color:var(--ink);text-decoration:none}
+  header.site nav{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:14.5px}
+  header.site nav a{color:var(--dim);text-decoration:none}
+  header.site nav a:hover{color:var(--ink)}
+  h1{font-size:34px;line-height:1.2;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .byline{color:var(--dim);font-size:15px;margin-bottom:8px}
+  .lede{font-size:18px;color:var(--dim);margin-bottom:28px}
+  .facts{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:0 0 32px;background:var(--diag);font-size:15.5px}
+  .facts p{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:6px}
+  .facts ul{list-style:none}
+  .facts li{margin:3px 0}
+  article h2{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:36px 0 12px}
+  article p{margin-bottom:14px}
+  article ul,article ol{margin:0 0 14px 22px}
+  article li{margin-bottom:6px}
+  article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:15.5px}
+  article th,article td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  article th{background:var(--diag)}
+  .diagram{background:var(--diag);border:1px solid var(--line);border-radius:8px;padding:12px;margin:0 0 8px}
+  .diagram svg{display:block;width:100%;height:auto}
+  .cap{color:var(--faint);font-size:14.5px;margin-bottom:20px}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .more{list-style:none;margin:0 !important}
+  footer.site{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;color:var(--dim);font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="name" href="../">Ram Yadlapalli</a>
+    <nav><a href="../">Home</a><a href="../writing/">Writing</a><a href="../rebuild/">Rebuild</a><a href="../driver-app/">Driver app</a><a href="../integrations/">Integrations</a><a href="../ask/">Ask</a></nav>
+  </header>
+
+  <h1>Designing an offline first driver app for drivers who lose signal</h1>
+  <p class="byline">Ram Yadlapalli · Case study · Engineering</p>
+  <p class="lede">Pickup and delivery drivers work in dock yards and on rural roads where the signal comes and goes. I designed our React Native driver app so drivers never wait on the network and their events reach the server in the order they happened, each counted once.</p>
+
+  <div class="facts"><p>At a glance</p><ul><li>My role: key architect and lead developer of the driver app, including the native modules for maps and navigation</li><li>Volume at a single carrier: about 500K driver events and about 1.5M GPS pings each weekday</li><li>Stack: React Native with native modules, Azure Event Hubs, Service Bus sessions, Blob Storage, push notifications</li></ul></div>
+
+  <article>
+<h2>The problem</h2>
+<p>Before writing any code I spent 3 weeks on the road with drivers to understand a day in their life. The design came from two facts of the job. First, the signal drops all the time, and a driver will not stand at a dock waiting for a spinner. Second, the order of events matters. If a delivery arrives at the server before the arrival at the stop, planners see the wrong picture and the data is wrong.</p>
+<h2>The constraints</h2>
+<ul>
+<li>Drivers have to keep recording their work offline, and the app has to catch up when the phone reconnects.</li>
+<li>Events for one driver must be processed in the order the driver did them.</li>
+<li>Phones retry, so the same event can arrive twice. It must only count once.</li>
+<li>Dispatchers change routes while drivers are offline, so the app must merge server changes with what the driver has done locally.</li>
+<li>Volume is real: about 500K driver events plus about 1.5M GPS pings each weekday at a single carrier.</li>
+</ul>
+<h2>The design decisions</h2>
+<div class="diagram"><svg viewBox="0 0 640 345" role="img" aria-label="Offline first driver app event flow" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif"><title>Offline first driver app event flow</title><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><rect x="10" y="10" width="300" height="325" rx="10" fill="none" stroke="#bbb" stroke-dasharray="6 5"/><text x="160" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="#595959">REACT NATIVE APP (WORKS OFFLINE)</text><text x="160" y="44" text-anchor="middle" font-size="11.5" fill="#595959">native modules for maps and navigation</text><rect x="30" y="52" width="260" height="46" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="160.0" y="73.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Driver action</text><text x="160.0" y="92.0" text-anchor="middle" font-size="12.5" fill="#555">arrive, pick up, complete, exception</text><rect x="30" y="128" width="260" height="50" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="160.0" y="151.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Local state updates first</text><text x="160.0" y="170.0" text-anchor="middle" font-size="12.5" fill="#555">screen never waits on the network</text><rect x="30" y="208" width="260" height="54" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="160.0" y="233.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Persisted outbox queue</text><text x="160.0" y="252.0" text-anchor="middle" font-size="12.5" fill="#555">event ID per action, retries, backoff</text><line x1="160" y1="98" x2="160" y2="126" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="160" y1="178" x2="160" y2="206" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><text x="160" y="284" text-anchor="middle" font-size="12.5" fill="#555">photos go to Blob Storage first</text><text x="160" y="312" text-anchor="middle" font-size="12.5" fill="#555">merge server changes</text><text x="490" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="#595959">IN THE CLOUD</text><rect x="360" y="48" width="260" height="50" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="490.0" y="71.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Processing rules</text><text x="490.0" y="90.0" text-anchor="middle" font-size="12.5" fill="#555">dedupe by event ID, current state wins</text><rect x="360" y="128" width="260" height="50" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="490.0" y="151.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Service Bus sessions</text><text x="490.0" y="170.0" text-anchor="middle" font-size="12.5" fill="#555">driver events, keyed by driver, FIFO</text><rect x="360" y="208" width="260" height="54" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="490.0" y="233.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Event Hubs</text><text x="490.0" y="252.0" text-anchor="middle" font-size="12.5" fill="#555">driver events and location</text><line x1="290" y1="235" x2="358" y2="235" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><text x="325" y="227" text-anchor="middle" font-size="12" fill="#555">serial</text><text x="325" y="254" text-anchor="middle" font-size="12" fill="#555">online</text><line x1="490" y1="206" x2="490" y2="180" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><line x1="490" y1="126" x2="490" y2="100" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/><rect x="360" y="286" width="260" height="44" rx="8" fill="#fff" stroke="#1f3864" stroke-width="1.5"/><text x="490.0" y="306.0" text-anchor="middle" font-size="15" font-weight="700" fill="#111">Push notification: refresh</text><text x="490.0" y="325.0" text-anchor="middle" font-size="12.5" fill="#555">app merges server data locally</text><line x1="360" y1="308" x2="292" y2="308" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/></svg></div>
+<p class="cap">Every action is applied on the phone first, then delivered through an ordered, idempotent pipeline.</p>
+<ul>
+<li><b>Native modules for maps and navigation.</b> I built the native modules that give the React Native app its maps and navigation.</li>
+<li><b>Local first.</b> Every action updates local state immediately, so the screen never waits on the network.</li>
+<li><b>Persisted outbox.</b> Each driver action is written to a queue on the phone that survives app restarts, pauses while the phone is offline, and retries with backoff.</li>
+<li><b>One at a time per driver.</b> The outbox sends a driver's events serially, oldest first, to Event Hubs, which carries both driver events and location traffic.</li>
+<li><b>Ordered end to end.</b> On the server, Service Bus sessions keyed by driver keep each driver's events first in, first out, while different drivers are processed in parallel.</li>
+<li><b>Idempotent.</b> The phone generates an ID for each event, and the server ignores any ID it has already processed. Retries are safe.</li>
+<li><b>Late events.</b> When an old event shows up after a dispatcher has changed the route, server rules check it against the current route, and the current state wins.</li>
+<li><b>Photos first.</b> Images go to Blob Storage before the event that references them is sent, so the server never sees an event pointing at a missing photo.</li>
+<li><b>Merging changes.</b> When dispatchers change something, a push notification tells the app to refresh, and the app merges the server data with the local state instead of overwriting the driver's work.</li>
+</ul>
+<h2>The result</h2>
+<p>Drivers keep recording stops, pickups, and exceptions with no signal, and when the phone reconnects their events reach the server in the order they happened, each counted once. Event Hubs carries about 500K driver events and about 1.5M GPS pings each weekday at a single carrier.</p>
+
+  <h2>More case studies</h2>
+  <ul class="more"><li><a href="../rebuild/">Moving a live logistics platform from an on premises monolith to Azure</a></li><li><a href="../integrations/">Integrating with AS400 and custom TMS systems without asking carriers to build much</a></li></ul>
+  </article>
+
+  <footer class="site">
+    <p><b>Ram Yadlapalli</b> leads product and engineering in Dallas and was the key architect and lead developer of a first and final mile optimization and execution platform for LTL carriers. <a href="../">More about my work</a> · <a href="mailto:rambabu.1990@gmail.com">Get in touch</a></p>
+  </footer>
+</div>
+</body>
+</html>
